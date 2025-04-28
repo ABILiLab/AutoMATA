@@ -253,6 +253,8 @@ Rscript Rscript limma_fpkm_df.R -i expression.txt -k info.txt -c 2 -d 0.05
 
 ### 1. Unzip the project
 
+The docker version can be downloaded at Zenodo (DOI: 10.5281/zenodo.15294581).
+
 **AutoMATA.zip** is the docker version of AutoMATA webserver.
 
 ```bash
