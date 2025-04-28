@@ -275,4 +275,6 @@ docker-compose up -d
 ```
 
 ## NOTE
+The complete document is available for download in Zenodo (DOI: 10.5281/zenodo.15294581).
+
 AutoMATA to be free to academia, charge for industry.
