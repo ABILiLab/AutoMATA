@@ -1,0 +1,5 @@
+Gene	100287102	653635	7157	Label
+Control_1	50	60	200	0
+Control_2	142	25	480	0
+Treatment_1	500	100	300	1
+Treatment_2	1012	160	490	1

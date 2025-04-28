@@ -1,0 +1,3 @@
+Gene	CKCR3	KIF1A	GRIK1	Label
+Control_1	50	60	200	0
+Treatment_1	500	100	300	1

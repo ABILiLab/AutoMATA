@@ -1,0 +1,479 @@
+nohup: ignoring input
+jobID = subtype_811
+model = RBFN
+kfold = 0
+ratio = 0
+epochs = 150
+earlystopping = 20
+learning rate = 0.005
+batch size = 48
+loss function = crossentropy
+optimizer function = adam
+label number = 4
+--------Begin the 1 epoch training---------
+train loss = 1.3859, acc = 0.2955, precision = 0.0873, recall = 0.2955, f1 = 0.1348 
+validation loss = 1.3789, acc = 0.2919, precision = 0.0852, recall = 0.2919, f1 = 0.1319
+Validation loss decreased (inf --> 1.378870).  Saving model ...
+--------Begin the 2 epoch training---------
+train loss = 1.3722, acc = 0.2955, precision = 0.0873, recall = 0.2955, f1 = 0.1348 
+validation loss = 1.3629, acc = 0.2919, precision = 0.0852, recall = 0.2919, f1 = 0.1319
+Validation loss decreased (1.378870 --> 1.362890).  Saving model ...
+--------Begin the 3 epoch training---------
+train loss = 1.3588, acc = 0.3437, precision = 0.4913, recall = 0.3437, f1 = 0.2322 
+validation loss = 1.3477, acc = 0.4783, precision = 0.4654, recall = 0.4783, f1 = 0.4246
+Validation loss decreased (1.362890 --> 1.347657).  Saving model ...
+--------Begin the 4 epoch training---------
+train loss = 1.3435, acc = 0.4541, precision = 0.3039, recall = 0.4541, f1 = 0.3367 
+validation loss = 1.3382, acc = 0.4348, precision = 0.189, recall = 0.4348, f1 = 0.2635
+Validation loss decreased (1.347657 --> 1.338238).  Saving model ...
+--------Begin the 5 epoch training---------
+train loss = 1.3252, acc = 0.4355, precision = 0.1896, recall = 0.4355, f1 = 0.2642 
+validation loss = 1.3198, acc = 0.4348, precision = 0.189, recall = 0.4348, f1 = 0.2635
+Validation loss decreased (1.338238 --> 1.319841).  Saving model ...
+--------Begin the 6 epoch training---------
+train loss = 1.3063, acc = 0.4355, precision = 0.1896, recall = 0.4355, f1 = 0.2642 
+validation loss = 1.3059, acc = 0.4348, precision = 0.189, recall = 0.4348, f1 = 0.2635
+Validation loss decreased (1.319841 --> 1.305880).  Saving model ...
+--------Begin the 7 epoch training---------
+train loss = 1.2877, acc = 0.4355, precision = 0.1896, recall = 0.4355, f1 = 0.2642 
+validation loss = 1.2916, acc = 0.4348, precision = 0.189, recall = 0.4348, f1 = 0.2635
+Validation loss decreased (1.305880 --> 1.291604).  Saving model ...
+--------Begin the 8 epoch training---------
+train loss = 1.2732, acc = 0.4355, precision = 0.1896, recall = 0.4355, f1 = 0.2642 
+validation loss = 1.2679, acc = 0.4348, precision = 0.189, recall = 0.4348, f1 = 0.2635
+Validation loss decreased (1.291604 --> 1.267937).  Saving model ...
+--------Begin the 9 epoch training---------
+train loss = 1.2613, acc = 0.4355, precision = 0.1896, recall = 0.4355, f1 = 0.2642 
+validation loss = 1.2772, acc = 0.4348, precision = 0.189, recall = 0.4348, f1 = 0.2635
+EarlyStopping counter: 1 out of 20
+--------Begin the 10 epoch training---------
+train loss = 1.2533, acc = 0.4355, precision = 0.1896, recall = 0.4355, f1 = 0.2642 
+validation loss = 1.2515, acc = 0.4348, precision = 0.189, recall = 0.4348, f1 = 0.2635
+Validation loss decreased (1.267937 --> 1.251513).  Saving model ...
+--------Begin the 11 epoch training---------
+train loss = 1.2451, acc = 0.4355, precision = 0.1896, recall = 0.4355, f1 = 0.2642 
+validation loss = 1.2568, acc = 0.4348, precision = 0.189, recall = 0.4348, f1 = 0.2635
+EarlyStopping counter: 1 out of 20
+--------Begin the 12 epoch training---------
+train loss = 1.2383, acc = 0.4355, precision = 0.1896, recall = 0.4355, f1 = 0.2642 
+validation loss = 1.225, acc = 0.4348, precision = 0.189, recall = 0.4348, f1 = 0.2635
+Validation loss decreased (1.251513 --> 1.224952).  Saving model ...
+--------Begin the 13 epoch training---------
+train loss = 1.2312, acc = 0.4355, precision = 0.1896, recall = 0.4355, f1 = 0.2642 
+validation loss = 1.2385, acc = 0.4348, precision = 0.189, recall = 0.4348, f1 = 0.2635
+EarlyStopping counter: 1 out of 20
+--------Begin the 14 epoch training---------
+train loss = 1.2265, acc = 0.4355, precision = 0.1896, recall = 0.4355, f1 = 0.2642 
+validation loss = 1.2167, acc = 0.4348, precision = 0.189, recall = 0.4348, f1 = 0.2635
+Validation loss decreased (1.224952 --> 1.216670).  Saving model ...
+--------Begin the 15 epoch training---------
+train loss = 1.2208, acc = 0.4479, precision = 0.2593, recall = 0.4479, f1 = 0.3212 
+validation loss = 1.2166, acc = 0.4534, precision = 0.2788, recall = 0.4534, f1 = 0.3407
+Validation loss decreased (1.216670 --> 1.216556).  Saving model ...
+--------Begin the 16 epoch training---------
+train loss = 1.2162, acc = 0.4728, precision = 0.3137, recall = 0.4728, f1 = 0.3742 
+validation loss = 1.2404, acc = 0.472, precision = 0.3125, recall = 0.472, f1 = 0.3737
+EarlyStopping counter: 1 out of 20
+--------Begin the 17 epoch training---------
+train loss = 1.2109, acc = 0.5047, precision = 0.3591, recall = 0.5047, f1 = 0.4192 
+validation loss = 1.2328, acc = 0.472, precision = 0.3265, recall = 0.472, f1 = 0.3853
+EarlyStopping counter: 2 out of 20
+--------Begin the 18 epoch training---------
+train loss = 1.2065, acc = 0.5179, precision = 0.3753, recall = 0.5179, f1 = 0.4352 
+validation loss = 1.2142, acc = 0.4845, precision = 0.347, recall = 0.4845, f1 = 0.4043
+Validation loss decreased (1.216556 --> 1.214236).  Saving model ...
+--------Begin the 19 epoch training---------
+train loss = 1.2026, acc = 0.5358, precision = 0.3949, recall = 0.5358, f1 = 0.4546 
+validation loss = 1.1929, acc = 0.4783, precision = 0.3462, recall = 0.4783, f1 = 0.4017
+Validation loss decreased (1.214236 --> 1.192879).  Saving model ...
+--------Begin the 20 epoch training---------
+train loss = 1.1991, acc = 0.5474, precision = 0.4103, recall = 0.5474, f1 = 0.4685 
+validation loss = 1.1991, acc = 0.4969, precision = 0.3655, recall = 0.4969, f1 = 0.4211
+EarlyStopping counter: 1 out of 20
+--------Begin the 21 epoch training---------
+train loss = 1.1954, acc = 0.5568, precision = 0.4229, recall = 0.5568, f1 = 0.4793 
+validation loss = 1.1917, acc = 0.5093, precision = 0.3781, recall = 0.5093, f1 = 0.4338
+Validation loss decreased (1.192879 --> 1.191655).  Saving model ...
+--------Begin the 22 epoch training---------
+train loss = 1.1917, acc = 0.5645, precision = 0.4328, recall = 0.5645, f1 = 0.4877 
+validation loss = 1.2067, acc = 0.5217, precision = 0.3907, recall = 0.5217, f1 = 0.4463
+EarlyStopping counter: 1 out of 20
+--------Begin the 23 epoch training---------
+train loss = 1.1894, acc = 0.5653, precision = 0.4345, recall = 0.5653, f1 = 0.4888 
+validation loss = 1.1989, acc = 0.5342, precision = 0.4032, recall = 0.5342, f1 = 0.4586
+EarlyStopping counter: 2 out of 20
+--------Begin the 24 epoch training---------
+train loss = 1.1856, acc = 0.5684, precision = 0.4388, recall = 0.5684, f1 = 0.4922 
+validation loss = 1.2005, acc = 0.5528, precision = 0.4221, recall = 0.5528, f1 = 0.4769
+EarlyStopping counter: 3 out of 20
+--------Begin the 25 epoch training---------
+train loss = 1.182, acc = 0.584, precision = 0.4578, recall = 0.584, f1 = 0.5079 
+validation loss = 1.1781, acc = 0.5652, precision = 0.4348, recall = 0.5652, f1 = 0.4888
+Validation loss decreased (1.191655 --> 1.178096).  Saving model ...
+--------Begin the 26 epoch training---------
+train loss = 1.1769, acc = 0.5855, precision = 0.462, recall = 0.5855, f1 = 0.5103 
+validation loss = 1.1917, acc = 0.5652, precision = 0.4348, recall = 0.5652, f1 = 0.4888
+EarlyStopping counter: 1 out of 20
+--------Begin the 27 epoch training---------
+train loss = 1.1735, acc = 0.5902, precision = 0.4676, recall = 0.5902, f1 = 0.5148 
+validation loss = 1.1654, acc = 0.5714, precision = 0.4412, recall = 0.5714, f1 = 0.4948
+Validation loss decreased (1.178096 --> 1.165382).  Saving model ...
+--------Begin the 28 epoch training---------
+train loss = 1.1676, acc = 0.5988, precision = 0.4779, recall = 0.5988, f1 = 0.5229 
+validation loss = 1.1673, acc = 0.5776, precision = 0.4476, recall = 0.5776, f1 = 0.5007
+EarlyStopping counter: 1 out of 20
+--------Begin the 29 epoch training---------
+train loss = 1.163, acc = 0.6026, precision = 0.4806, recall = 0.6026, f1 = 0.5261 
+validation loss = 1.1596, acc = 0.5901, precision = 0.4606, recall = 0.5901, f1 = 0.5125
+Validation loss decreased (1.165382 --> 1.159553).  Saving model ...
+--------Begin the 30 epoch training---------
+train loss = 1.1587, acc = 0.6042, precision = 0.6142, recall = 0.6042, f1 = 0.5292 
+validation loss = 1.1508, acc = 0.5963, precision = 0.4672, recall = 0.5963, f1 = 0.5184
+Validation loss decreased (1.159553 --> 1.150757).  Saving model ...
+--------Begin the 31 epoch training---------
+train loss = 1.1537, acc = 0.6096, precision = 0.618, recall = 0.6096, f1 = 0.5337 
+validation loss = 1.1733, acc = 0.6025, precision = 0.4739, recall = 0.6025, f1 = 0.5242
+EarlyStopping counter: 1 out of 20
+--------Begin the 32 epoch training---------
+train loss = 1.1497, acc = 0.6096, precision = 0.6169, recall = 0.6096, f1 = 0.5334 
+validation loss = 1.1458, acc = 0.6025, precision = 0.4739, recall = 0.6025, f1 = 0.5242
+Validation loss decreased (1.150757 --> 1.145807).  Saving model ...
+--------Begin the 33 epoch training---------
+train loss = 1.1444, acc = 0.612, precision = 0.6195, recall = 0.612, f1 = 0.5356 
+validation loss = 1.1348, acc = 0.6211, precision = 0.4898, recall = 0.6211, f1 = 0.5404
+Validation loss decreased (1.145807 --> 1.134819).  Saving model ...
+--------Begin the 34 epoch training---------
+train loss = 1.1415, acc = 0.6159, precision = 0.6256, recall = 0.6159, f1 = 0.5395 
+validation loss = 1.1745, acc = 0.6211, precision = 0.4898, recall = 0.6211, f1 = 0.5404
+EarlyStopping counter: 1 out of 20
+--------Begin the 35 epoch training---------
+train loss = 1.1366, acc = 0.6174, precision = 0.6251, recall = 0.6174, f1 = 0.5404 
+validation loss = 1.1374, acc = 0.6211, precision = 0.4898, recall = 0.6211, f1 = 0.5404
+EarlyStopping counter: 2 out of 20
+--------Begin the 36 epoch training---------
+train loss = 1.1323, acc = 0.6213, precision = 0.6295, recall = 0.6213, f1 = 0.544 
+validation loss = 1.1197, acc = 0.6273, precision = 0.4921, recall = 0.6273, f1 = 0.5449
+Validation loss decreased (1.134819 --> 1.119711).  Saving model ...
+--------Begin the 37 epoch training---------
+train loss = 1.1281, acc = 0.619, precision = 0.7605, recall = 0.619, f1 = 0.5413 
+validation loss = 1.1351, acc = 0.6335, precision = 0.4989, recall = 0.6335, f1 = 0.5508
+EarlyStopping counter: 1 out of 20
+--------Begin the 38 epoch training---------
+train loss = 1.1214, acc = 0.6267, precision = 0.7394, recall = 0.6267, f1 = 0.5523 
+validation loss = 1.1208, acc = 0.6335, precision = 0.4989, recall = 0.6335, f1 = 0.5508
+EarlyStopping counter: 2 out of 20
+--------Begin the 39 epoch training---------
+train loss = 1.1154, acc = 0.6275, precision = 0.7499, recall = 0.6275, f1 = 0.5549 
+validation loss = 1.1095, acc = 0.6335, precision = 0.4989, recall = 0.6335, f1 = 0.5508
+Validation loss decreased (1.119711 --> 1.109515).  Saving model ...
+--------Begin the 40 epoch training---------
+train loss = 1.1102, acc = 0.6361, precision = 0.733, recall = 0.6361, f1 = 0.5695 
+validation loss = 1.1128, acc = 0.6273, precision = 0.4921, recall = 0.6273, f1 = 0.5449
+EarlyStopping counter: 1 out of 20
+--------Begin the 41 epoch training---------
+train loss = 1.1033, acc = 0.6415, precision = 0.7421, recall = 0.6415, f1 = 0.5793 
+validation loss = 1.1182, acc = 0.6335, precision = 0.6365, recall = 0.6335, f1 = 0.5581
+EarlyStopping counter: 2 out of 20
+--------Begin the 42 epoch training---------
+train loss = 1.0964, acc = 0.6563, precision = 0.7527, recall = 0.6563, f1 = 0.6023 
+validation loss = 1.1165, acc = 0.646, precision = 0.5858, recall = 0.646, f1 = 0.5819
+EarlyStopping counter: 3 out of 20
+--------Begin the 43 epoch training---------
+train loss = 1.09, acc = 0.6656, precision = 0.7577, recall = 0.6656, f1 = 0.6164 
+validation loss = 1.1038, acc = 0.6584, precision = 0.6055, recall = 0.6584, f1 = 0.6016
+Validation loss decreased (1.109515 --> 1.103796).  Saving model ...
+--------Begin the 44 epoch training---------
+train loss = 1.0825, acc = 0.6765, precision = 0.7632, recall = 0.6765, f1 = 0.6297 
+validation loss = 1.0893, acc = 0.677, precision = 0.6233, recall = 0.677, f1 = 0.6275
+Validation loss decreased (1.103796 --> 1.089324).  Saving model ...
+--------Begin the 45 epoch training---------
+train loss = 1.0756, acc = 0.6835, precision = 0.7609, recall = 0.6835, f1 = 0.6384 
+validation loss = 1.0707, acc = 0.6832, precision = 0.6279, recall = 0.6832, f1 = 0.6353
+Validation loss decreased (1.089324 --> 1.070734).  Saving model ...
+--------Begin the 46 epoch training---------
+train loss = 1.0689, acc = 0.6928, precision = 0.7647, recall = 0.6928, f1 = 0.6486 
+validation loss = 1.0755, acc = 0.6957, precision = 0.6389, recall = 0.6957, f1 = 0.6488
+EarlyStopping counter: 1 out of 20
+--------Begin the 47 epoch training---------
+train loss = 1.0616, acc = 0.6998, precision = 0.7661, recall = 0.6998, f1 = 0.6565 
+validation loss = 1.0576, acc = 0.7081, precision = 0.6404, recall = 0.7081, f1 = 0.662
+Validation loss decreased (1.070734 --> 1.057590).  Saving model ...
+--------Begin the 48 epoch training---------
+train loss = 1.0549, acc = 0.7092, precision = 0.7706, recall = 0.7092, f1 = 0.6658 
+validation loss = 1.0653, acc = 0.7143, precision = 0.6473, recall = 0.7143, f1 = 0.6681
+EarlyStopping counter: 1 out of 20
+--------Begin the 49 epoch training---------
+train loss = 1.0481, acc = 0.7131, precision = 0.7409, recall = 0.7131, f1 = 0.6715 
+validation loss = 1.0494, acc = 0.7081, precision = 0.7544, recall = 0.7081, f1 = 0.6676
+Validation loss decreased (1.057590 --> 1.049375).  Saving model ...
+--------Begin the 50 epoch training---------
+train loss = 1.0428, acc = 0.7263, precision = 0.7592, recall = 0.7263, f1 = 0.6954 
+validation loss = 1.0574, acc = 0.7453, precision = 0.7639, recall = 0.7453, f1 = 0.735
+EarlyStopping counter: 1 out of 20
+--------Begin the 51 epoch training---------
+train loss = 1.0369, acc = 0.7457, precision = 0.7621, recall = 0.7457, f1 = 0.728 
+validation loss = 1.0411, acc = 0.795, precision = 0.8099, recall = 0.795, f1 = 0.79
+Validation loss decreased (1.049375 --> 1.041063).  Saving model ...
+--------Begin the 52 epoch training---------
+train loss = 1.0309, acc = 0.7768, precision = 0.7902, recall = 0.7768, f1 = 0.7712 
+validation loss = 1.0414, acc = 0.7888, precision = 0.7888, recall = 0.7888, f1 = 0.7842
+EarlyStopping counter: 1 out of 20
+--------Begin the 53 epoch training---------
+train loss = 1.0248, acc = 0.8064, precision = 0.8078, recall = 0.8064, f1 = 0.8034 
+validation loss = 1.0365, acc = 0.8137, precision = 0.8132, recall = 0.8137, f1 = 0.8094
+Validation loss decreased (1.041063 --> 1.036496).  Saving model ...
+--------Begin the 54 epoch training---------
+train loss = 1.0195, acc = 0.8188, precision = 0.8226, recall = 0.8188, f1 = 0.816 
+validation loss = 1.0263, acc = 0.8012, precision = 0.8002, recall = 0.8012, f1 = 0.7966
+Validation loss decreased (1.036496 --> 1.026280).  Saving model ...
+--------Begin the 55 epoch training---------
+train loss = 1.0145, acc = 0.818, precision = 0.8186, recall = 0.818, f1 = 0.8143 
+validation loss = 1.0292, acc = 0.8199, precision = 0.8198, recall = 0.8199, f1 = 0.8157
+EarlyStopping counter: 1 out of 20
+--------Begin the 56 epoch training---------
+train loss = 1.0094, acc = 0.8173, precision = 0.8187, recall = 0.8173, f1 = 0.8141 
+validation loss = 1.0128, acc = 0.8261, precision = 0.8266, recall = 0.8261, f1 = 0.8219
+Validation loss decreased (1.026280 --> 1.012834).  Saving model ...
+--------Begin the 57 epoch training---------
+train loss = 1.0039, acc = 0.8188, precision = 0.8205, recall = 0.8188, f1 = 0.8158 
+validation loss = 1.0206, acc = 0.8075, precision = 0.8066, recall = 0.8075, f1 = 0.8039
+EarlyStopping counter: 1 out of 20
+--------Begin the 58 epoch training---------
+train loss = 0.9992, acc = 0.8227, precision = 0.8231, recall = 0.8227, f1 = 0.8194 
+validation loss = 1.0158, acc = 0.8199, precision = 0.8198, recall = 0.8199, f1 = 0.8157
+EarlyStopping counter: 2 out of 20
+--------Begin the 59 epoch training---------
+train loss = 0.9949, acc = 0.8235, precision = 0.8244, recall = 0.8235, f1 = 0.82 
+validation loss = 0.9931, acc = 0.8137, precision = 0.8132, recall = 0.8137, f1 = 0.8094
+Validation loss decreased (1.012834 --> 0.993080).  Saving model ...
+--------Begin the 60 epoch training---------
+train loss = 0.9906, acc = 0.8227, precision = 0.8245, recall = 0.8227, f1 = 0.8197 
+validation loss = 1.0081, acc = 0.8323, precision = 0.8349, recall = 0.8323, f1 = 0.8297
+EarlyStopping counter: 1 out of 20
+--------Begin the 61 epoch training---------
+train loss = 0.9865, acc = 0.8235, precision = 0.8259, recall = 0.8235, f1 = 0.8207 
+validation loss = 1.0114, acc = 0.8012, precision = 0.8002, recall = 0.8012, f1 = 0.7974
+EarlyStopping counter: 2 out of 20
+--------Begin the 62 epoch training---------
+train loss = 0.9833, acc = 0.8266, precision = 0.8252, recall = 0.8266, f1 = 0.8231 
+validation loss = 0.9874, acc = 0.8199, precision = 0.8212, recall = 0.8199, f1 = 0.8172
+Validation loss decreased (0.993080 --> 0.987410).  Saving model ...
+--------Begin the 63 epoch training---------
+train loss = 0.9799, acc = 0.8281, precision = 0.8306, recall = 0.8281, f1 = 0.8254 
+validation loss = 0.9868, acc = 0.8012, precision = 0.8016, recall = 0.8012, f1 = 0.7962
+Validation loss decreased (0.987410 --> 0.986775).  Saving model ...
+--------Begin the 64 epoch training---------
+train loss = 0.9745, acc = 0.8274, precision = 0.8278, recall = 0.8274, f1 = 0.8242 
+validation loss = 0.977, acc = 0.8199, precision = 0.8229, recall = 0.8199, f1 = 0.816
+Validation loss decreased (0.986775 --> 0.977039).  Saving model ...
+--------Begin the 65 epoch training---------
+train loss = 0.9712, acc = 0.8313, precision = 0.8333, recall = 0.8313, f1 = 0.8284 
+validation loss = 0.9941, acc = 0.8012, precision = 0.7999, recall = 0.8012, f1 = 0.7984
+EarlyStopping counter: 1 out of 20
+--------Begin the 66 epoch training---------
+train loss = 0.9681, acc = 0.8305, precision = 0.8309, recall = 0.8305, f1 = 0.8273 
+validation loss = 1.0006, acc = 0.8199, precision = 0.8214, recall = 0.8199, f1 = 0.8174
+EarlyStopping counter: 2 out of 20
+--------Begin the 67 epoch training---------
+train loss = 0.9637, acc = 0.832, precision = 0.8324, recall = 0.832, f1 = 0.8288 
+validation loss = 0.9974, acc = 0.8137, precision = 0.816, recall = 0.8137, f1 = 0.8128
+EarlyStopping counter: 3 out of 20
+--------Begin the 68 epoch training---------
+train loss = 0.96, acc = 0.8336, precision = 0.8358, recall = 0.8336, f1 = 0.8311 
+validation loss = 0.9702, acc = 0.8137, precision = 0.8174, recall = 0.8137, f1 = 0.8133
+Validation loss decreased (0.977039 --> 0.970222).  Saving model ...
+--------Begin the 69 epoch training---------
+train loss = 0.9557, acc = 0.8351, precision = 0.8351, recall = 0.8351, f1 = 0.8325 
+validation loss = 0.9653, acc = 0.8323, precision = 0.838, recall = 0.8323, f1 = 0.8323
+Validation loss decreased (0.970222 --> 0.965256).  Saving model ...
+--------Begin the 70 epoch training---------
+train loss = 0.953, acc = 0.8383, precision = 0.8411, recall = 0.8383, f1 = 0.8363 
+validation loss = 0.9694, acc = 0.795, precision = 0.7976, recall = 0.795, f1 = 0.7939
+EarlyStopping counter: 1 out of 20
+--------Begin the 71 epoch training---------
+train loss = 0.95, acc = 0.8406, precision = 0.841, recall = 0.8406, f1 = 0.8381 
+validation loss = 0.9746, acc = 0.8137, precision = 0.8174, recall = 0.8137, f1 = 0.8133
+EarlyStopping counter: 2 out of 20
+--------Begin the 72 epoch training---------
+train loss = 0.9468, acc = 0.8476, precision = 0.851, recall = 0.8476, f1 = 0.8462 
+validation loss = 0.9752, acc = 0.8012, precision = 0.8042, recall = 0.8012, f1 = 0.8004
+EarlyStopping counter: 3 out of 20
+--------Begin the 73 epoch training---------
+train loss = 0.9442, acc = 0.8491, precision = 0.8499, recall = 0.8491, f1 = 0.8476 
+validation loss = 0.9582, acc = 0.8261, precision = 0.831, recall = 0.8261, f1 = 0.826
+Validation loss decreased (0.965256 --> 0.958191).  Saving model ...
+--------Begin the 74 epoch training---------
+train loss = 0.9431, acc = 0.8445, precision = 0.8489, recall = 0.8445, f1 = 0.8435 
+validation loss = 0.9734, acc = 0.8012, precision = 0.8032, recall = 0.8012, f1 = 0.7995
+EarlyStopping counter: 1 out of 20
+--------Begin the 75 epoch training---------
+train loss = 0.9395, acc = 0.853, precision = 0.8552, recall = 0.853, f1 = 0.8517 
+validation loss = 0.9588, acc = 0.8137, precision = 0.8179, recall = 0.8137, f1 = 0.8128
+EarlyStopping counter: 2 out of 20
+--------Begin the 76 epoch training---------
+train loss = 0.9381, acc = 0.8491, precision = 0.8527, recall = 0.8491, f1 = 0.8479 
+validation loss = 0.9643, acc = 0.8137, precision = 0.8179, recall = 0.8137, f1 = 0.8128
+EarlyStopping counter: 3 out of 20
+--------Begin the 77 epoch training---------
+train loss = 0.9357, acc = 0.853, precision = 0.8561, recall = 0.853, f1 = 0.8521 
+validation loss = 0.945, acc = 0.8137, precision = 0.8179, recall = 0.8137, f1 = 0.8128
+Validation loss decreased (0.958191 --> 0.945018).  Saving model ...
+--------Begin the 78 epoch training---------
+train loss = 0.9341, acc = 0.8523, precision = 0.8537, recall = 0.8523, f1 = 0.8511 
+validation loss = 0.9578, acc = 0.8447, precision = 0.8515, recall = 0.8447, f1 = 0.8438
+EarlyStopping counter: 1 out of 20
+--------Begin the 79 epoch training---------
+train loss = 0.9322, acc = 0.8507, precision = 0.854, recall = 0.8507, f1 = 0.8499 
+validation loss = 0.9503, acc = 0.8137, precision = 0.8165, recall = 0.8137, f1 = 0.8123
+EarlyStopping counter: 2 out of 20
+--------Begin the 80 epoch training---------
+train loss = 0.9307, acc = 0.8554, precision = 0.8602, recall = 0.8554, f1 = 0.8547 
+validation loss = 0.9563, acc = 0.7888, precision = 0.7912, recall = 0.7888, f1 = 0.7871
+EarlyStopping counter: 3 out of 20
+--------Begin the 81 epoch training---------
+train loss = 0.9286, acc = 0.8546, precision = 0.8559, recall = 0.8546, f1 = 0.8533 
+validation loss = 0.9488, acc = 0.8075, precision = 0.8098, recall = 0.8075, f1 = 0.8059
+EarlyStopping counter: 4 out of 20
+--------Begin the 82 epoch training---------
+train loss = 0.9262, acc = 0.8585, precision = 0.8602, recall = 0.8585, f1 = 0.8572 
+validation loss = 0.9606, acc = 0.8199, precision = 0.8233, recall = 0.8199, f1 = 0.8187
+EarlyStopping counter: 5 out of 20
+--------Begin the 83 epoch training---------
+train loss = 0.9254, acc = 0.8585, precision = 0.8618, recall = 0.8585, f1 = 0.8577 
+validation loss = 0.9511, acc = 0.8075, precision = 0.8098, recall = 0.8075, f1 = 0.8059
+EarlyStopping counter: 6 out of 20
+--------Begin the 84 epoch training---------
+train loss = 0.9235, acc = 0.8624, precision = 0.8638, recall = 0.8624, f1 = 0.8611 
+validation loss = 0.9413, acc = 0.8261, precision = 0.8302, recall = 0.8261, f1 = 0.825
+Validation loss decreased (0.945018 --> 0.941324).  Saving model ...
+--------Begin the 85 epoch training---------
+train loss = 0.9226, acc = 0.8608, precision = 0.864, recall = 0.8608, f1 = 0.86 
+validation loss = 0.9507, acc = 0.8137, precision = 0.8179, recall = 0.8137, f1 = 0.8128
+EarlyStopping counter: 1 out of 20
+--------Begin the 86 epoch training---------
+train loss = 0.921, acc = 0.8655, precision = 0.8688, recall = 0.8655, f1 = 0.8648 
+validation loss = 0.9739, acc = 0.8137, precision = 0.8165, recall = 0.8137, f1 = 0.8123
+EarlyStopping counter: 2 out of 20
+--------Begin the 87 epoch training---------
+train loss = 0.9202, acc = 0.8694, precision = 0.8721, recall = 0.8694, f1 = 0.8684 
+validation loss = 0.9683, acc = 0.8199, precision = 0.8233, recall = 0.8199, f1 = 0.8187
+EarlyStopping counter: 3 out of 20
+--------Begin the 88 epoch training---------
+train loss = 0.9197, acc = 0.8701, precision = 0.8712, recall = 0.8701, f1 = 0.8689 
+validation loss = 0.9544, acc = 0.8385, precision = 0.8473, recall = 0.8385, f1 = 0.8381
+EarlyStopping counter: 4 out of 20
+--------Begin the 89 epoch training---------
+train loss = 0.9183, acc = 0.8686, precision = 0.8732, recall = 0.8686, f1 = 0.8683 
+validation loss = 0.9412, acc = 0.8199, precision = 0.8233, recall = 0.8199, f1 = 0.8187
+Validation loss decreased (0.941324 --> 0.941219).  Saving model ...
+--------Begin the 90 epoch training---------
+train loss = 0.9165, acc = 0.8717, precision = 0.874, recall = 0.8717, f1 = 0.8707 
+validation loss = 0.9538, acc = 0.8261, precision = 0.8302, recall = 0.8261, f1 = 0.825
+EarlyStopping counter: 1 out of 20
+--------Begin the 91 epoch training---------
+train loss = 0.9149, acc = 0.8717, precision = 0.8744, recall = 0.8717, f1 = 0.8708 
+validation loss = 0.9492, acc = 0.8261, precision = 0.8302, recall = 0.8261, f1 = 0.825
+EarlyStopping counter: 2 out of 20
+--------Begin the 92 epoch training---------
+train loss = 0.9139, acc = 0.8717, precision = 0.8752, recall = 0.8717, f1 = 0.8711 
+validation loss = 0.9575, acc = 0.8137, precision = 0.8165, recall = 0.8137, f1 = 0.8123
+EarlyStopping counter: 3 out of 20
+--------Begin the 93 epoch training---------
+train loss = 0.9126, acc = 0.8756, precision = 0.8777, recall = 0.8756, f1 = 0.8748 
+validation loss = 0.9516, acc = 0.8137, precision = 0.8165, recall = 0.8137, f1 = 0.8123
+EarlyStopping counter: 4 out of 20
+--------Begin the 94 epoch training---------
+train loss = 0.9121, acc = 0.8756, precision = 0.8787, recall = 0.8756, f1 = 0.875 
+validation loss = 0.9485, acc = 0.8137, precision = 0.8165, recall = 0.8137, f1 = 0.8123
+EarlyStopping counter: 5 out of 20
+--------Begin the 95 epoch training---------
+train loss = 0.9119, acc = 0.8717, precision = 0.8743, recall = 0.8717, f1 = 0.8709 
+validation loss = 0.95, acc = 0.8199, precision = 0.8234, recall = 0.8199, f1 = 0.8179
+EarlyStopping counter: 6 out of 20
+--------Begin the 96 epoch training---------
+train loss = 0.9096, acc = 0.8818, precision = 0.8834, recall = 0.8818, f1 = 0.881 
+validation loss = 0.9299, acc = 0.8137, precision = 0.8165, recall = 0.8137, f1 = 0.8123
+Validation loss decreased (0.941219 --> 0.929912).  Saving model ...
+--------Begin the 97 epoch training---------
+train loss = 0.9088, acc = 0.8779, precision = 0.8804, recall = 0.8779, f1 = 0.8773 
+validation loss = 0.9451, acc = 0.8137, precision = 0.8187, recall = 0.8137, f1 = 0.813
+EarlyStopping counter: 1 out of 20
+--------Begin the 98 epoch training---------
+train loss = 0.9077, acc = 0.881, precision = 0.8823, recall = 0.881, f1 = 0.88 
+validation loss = 0.9482, acc = 0.8199, precision = 0.8234, recall = 0.8199, f1 = 0.8179
+EarlyStopping counter: 2 out of 20
+--------Begin the 99 epoch training---------
+train loss = 0.9066, acc = 0.881, precision = 0.8832, recall = 0.881, f1 = 0.8803 
+validation loss = 0.9532, acc = 0.8261, precision = 0.8325, recall = 0.8261, f1 = 0.825
+EarlyStopping counter: 3 out of 20
+--------Begin the 100 epoch training---------
+train loss = 0.9065, acc = 0.881, precision = 0.8835, recall = 0.881, f1 = 0.8804 
+validation loss = 0.9598, acc = 0.8199, precision = 0.8234, recall = 0.8199, f1 = 0.8179
+EarlyStopping counter: 4 out of 20
+--------Begin the 101 epoch training---------
+train loss = 0.9052, acc = 0.8857, precision = 0.8873, recall = 0.8857, f1 = 0.8847 
+validation loss = 0.946, acc = 0.8137, precision = 0.8165, recall = 0.8137, f1 = 0.8123
+EarlyStopping counter: 5 out of 20
+--------Begin the 102 epoch training---------
+train loss = 0.9038, acc = 0.8896, precision = 0.8904, recall = 0.8896, f1 = 0.8884 
+validation loss = 0.9434, acc = 0.8137, precision = 0.8187, recall = 0.8137, f1 = 0.8124
+EarlyStopping counter: 6 out of 20
+--------Begin the 103 epoch training---------
+train loss = 0.9032, acc = 0.8834, precision = 0.8858, recall = 0.8834, f1 = 0.8827 
+validation loss = 0.9474, acc = 0.8199, precision = 0.8234, recall = 0.8199, f1 = 0.8179
+EarlyStopping counter: 7 out of 20
+--------Begin the 104 epoch training---------
+train loss = 0.9026, acc = 0.8896, precision = 0.8899, recall = 0.8896, f1 = 0.8882 
+validation loss = 0.9499, acc = 0.8137, precision = 0.8187, recall = 0.8137, f1 = 0.813
+EarlyStopping counter: 8 out of 20
+--------Begin the 105 epoch training---------
+train loss = 0.902, acc = 0.8896, precision = 0.8907, recall = 0.8896, f1 = 0.8884 
+validation loss = 0.9361, acc = 0.8261, precision = 0.8325, recall = 0.8261, f1 = 0.825
+EarlyStopping counter: 9 out of 20
+--------Begin the 106 epoch training---------
+train loss = 0.9009, acc = 0.888, precision = 0.8903, recall = 0.888, f1 = 0.8871 
+validation loss = 0.9357, acc = 0.8199, precision = 0.8234, recall = 0.8199, f1 = 0.8179
+EarlyStopping counter: 10 out of 20
+--------Begin the 107 epoch training---------
+train loss = 0.9002, acc = 0.8904, precision = 0.8907, recall = 0.8904, f1 = 0.889 
+validation loss = 0.9564, acc = 0.8261, precision = 0.8325, recall = 0.8261, f1 = 0.825
+EarlyStopping counter: 11 out of 20
+--------Begin the 108 epoch training---------
+train loss = 0.8997, acc = 0.8888, precision = 0.8893, recall = 0.8888, f1 = 0.8875 
+validation loss = 0.9665, acc = 0.8137, precision = 0.8187, recall = 0.8137, f1 = 0.8124
+EarlyStopping counter: 12 out of 20
+--------Begin the 109 epoch training---------
+train loss = 0.8983, acc = 0.8904, precision = 0.8918, recall = 0.8904, f1 = 0.8893 
+validation loss = 0.9514, acc = 0.8137, precision = 0.8187, recall = 0.8137, f1 = 0.8124
+EarlyStopping counter: 13 out of 20
+--------Begin the 110 epoch training---------
+train loss = 0.898, acc = 0.8942, precision = 0.8953, recall = 0.8942, f1 = 0.8929 
+validation loss = 0.9464, acc = 0.8137, precision = 0.8187, recall = 0.8137, f1 = 0.8124
+EarlyStopping counter: 14 out of 20
+--------Begin the 111 epoch training---------
+train loss = 0.8975, acc = 0.895, precision = 0.8954, recall = 0.895, f1 = 0.8936 
+validation loss = 0.9443, acc = 0.8199, precision = 0.8255, recall = 0.8199, f1 = 0.8187
+EarlyStopping counter: 15 out of 20
+--------Begin the 112 epoch training---------
+train loss = 0.897, acc = 0.8966, precision = 0.8973, recall = 0.8966, f1 = 0.8952 
+validation loss = 0.9372, acc = 0.8137, precision = 0.8187, recall = 0.8137, f1 = 0.8124
+EarlyStopping counter: 16 out of 20
+--------Begin the 113 epoch training---------
+train loss = 0.8966, acc = 0.8989, precision = 0.8998, recall = 0.8989, f1 = 0.8974 
+validation loss = 0.9589, acc = 0.8137, precision = 0.8187, recall = 0.8137, f1 = 0.8124
+EarlyStopping counter: 17 out of 20
+--------Begin the 114 epoch training---------
+train loss = 0.8953, acc = 0.8997, precision = 0.8999, recall = 0.8997, f1 = 0.8984 
+validation loss = 0.9418, acc = 0.8261, precision = 0.8325, recall = 0.8261, f1 = 0.825
+EarlyStopping counter: 18 out of 20
+--------Begin the 115 epoch training---------
+train loss = 0.8949, acc = 0.8927, precision = 0.8951, recall = 0.8927, f1 = 0.8918 
+validation loss = 0.9512, acc = 0.8199, precision = 0.8234, recall = 0.8199, f1 = 0.8179
+EarlyStopping counter: 19 out of 20
+--------Begin the 116 epoch training---------
+train loss = 0.8936, acc = 0.8974, precision = 0.898, recall = 0.8974, f1 = 0.8961 
+validation loss = 0.9524, acc = 0.8199, precision = 0.8255, recall = 0.8199, f1 = 0.8187
+EarlyStopping counter: 20 out of 20
+early stopping
+Done!
+test acc = 0.8571428571428571, precision = 0.8650973432851401, recall = 0.8571428571428571, f1 = 0.8580263159196313

@@ -1,0 +1,5 @@
+Sample	Group
+Control_1	Control
+Control_2	Control
+Treatment_1	Treatment
+Treatment_2	Treatment

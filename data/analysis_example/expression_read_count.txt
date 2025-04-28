@@ -1,0 +1,4 @@
+Gene	Control_1	Control_2	Treatment_1	Treatment_2
+CKCR3	50	142	500	1012
+KIF1A	60	25	100	160
+GRIK1	200	480	300	490
