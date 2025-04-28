@@ -272,3 +272,5 @@ docker-compose build
 docker-compose up -d
 ```
 
+## Code Usage
+AutoMATA to be free to academia, charge for industry.
