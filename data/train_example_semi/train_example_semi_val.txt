@@ -1,0 +1,7 @@
+Sample_Name	Feature_1	Feature_2	Feature_3	Feature_4	Feature_5	Label
+Sample_001	1.23	4.56	7.89	2.34	5.67	0
+Sample_002	2.34	5.67	8.90	3.45	6.78	1
+Sample_003	3.45	6.78	9.01	4.56	7.89	0
+Sample_004	4.56	7.89	0.12	5.67	8.90	2
+Sample_005	5.67	8.90	1.23	6.78	9.01	1
+Sample_006	6.78	9.01	2.34	7.89	0.12	0
