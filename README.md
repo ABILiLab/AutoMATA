@@ -289,7 +289,7 @@ Rscript ppi.R -i ppi_example.txt -a SYMBOL -b Homo_sapiens -c 400 -d linear -e 5
 
 ### 1. Unzip the project
 
-The docker version can be downloaded at Zenodo (DOI: 10.5281/zenodo.15294581).
+The docker version can be downloaded at Zenodo (DOI: 10.5281/zenodo.15294581) and HuggingFace (https://huggingface.co/spaces/CongWang33/AutoMATA).
 
 **AutoMATA.zip** is the docker version of AutoMATA webserver.
 
