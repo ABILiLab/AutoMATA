@@ -29,6 +29,7 @@ Rscript install_packages.R
 # 7. loss_function: please input one of crossentropy, nllloss and focalloss
 # 8. optimizer_function: please input one of adam, rmsprop and sgd
 # 9. output_size: The number of labels. The range is [2, 7], 2 for binary classification, 4 for 4-class classification.
+# 10. random_seed: Keep the same random seed to ensure reproducibility.
 
 # About model parameters
 # User can change hidden_size_1 to fit the distribution of data, dropout_rate to prevent overfitting, etc.
@@ -40,11 +41,11 @@ Rscript install_packages.R
 conda activate automata
 cd code/train
 # train AutoEncoder (using default parameters)
-python autoencoder.py --kfold 0 --ratio 0 --epochs 50 --es 10 --lr 0.01 --bs 32 --loss_function crossentropy --optimizer_function adam --output_size 2
+python autoencoder.py --kfold 0 --ratio 0 --epochs 50 --es 10 --lr 0.01 --bs 32 --loss_function crossentropy --optimizer_function adam --output_size 2 -–random_seed 42
 # train CNN
-python cnn.py --kfold 0 --ratio 8:1:1 --epochs 50 --es 10 --lr 0.01 --bs 32 --loss_function crossentropy --optimizer_function adam --output_size 4
+python cnn.py --kfold 0 --ratio 8:1:1 --epochs 50 --es 10 --lr 0.01 --bs 32 --loss_function crossentropy --optimizer_function adam --output_size 4 -–random_seed 42
 # train LSTM
-python lstm.py --kfold 4 --ratio 0 --epochs 50 --es 10 --lr 0.005 --bs 32 --loss_function nllloss --optimizer_function rmsprop --output_size 2
+python lstm.py --kfold 4 --ratio 0 --epochs 50 --es 10 --lr 0.005 --bs 32 --loss_function nllloss --optimizer_function rmsprop --output_size 2 -–random_seed 42
 # train MLP (using default parameters)
 python mlp.py
 ```
@@ -155,8 +156,8 @@ Rscript venn.R -i venn_test.txt -t Vennpie
 # About cmd parameters
 # -i (input): the path of input data file. Keep logFC, padj, gene column names of dataset consistent. The seperater is '\t'.
 # -g (gmt): the path of gmt data file. If you want to conduct GSEA analysis, then specialize it to the path gmt data file, otherwise set it to 'none'.
-# -a (fc_thr): the threshold of logFC
-# -b (padj_thr): the threshold of padj (adjusted p-value)
+# -a (fc_thr): the threshold of logFC. If you wish to obtain stringent results, use 1.5, 2, or other strict thresholds (|log2FC| ≥ 1.5 or ≥ 2); conversely, use 0.58 or other lenient thresholds (|log2FC| ≥ 0.58).
+# -b (padj_thr): the threshold of padj (adjusted p-value). If you wish to obtain stringent results, use 0.01 or other strict thresholds (padj < 0.01); conversely, use 0.05 or other lenient thresholds (padj < 0.05).
 # -c (top): the number of higher-order genes to be emphasized. The emphasized genes are in the dashed box.
 # -d (top_fc_thr): the threshold of logFC for the higher-order gene. It should be more strict than 'fc_thr'
 # -e (top_padj_thr): the threshold of padj for the higher-order gene. It should be more strict than 'padj_thr'
@@ -175,13 +176,14 @@ Rscript volcano_gsea_padj.R -i volcano_test.txt -g none -a 1 -b 0.05 -c 30 -d 2 
 # -i (input): the path of input data file. The first column is gene symbol, and the column name is gene. The data file only needs the gene symbol if 'type' is bubble or bar, otherwise needs to make sure that the data file has numeric data with the column name logFC to sort by the size of the value.
 # -a (type): the type of figure. Please input one of bubble, bar, chord, cluster and circle.
 # -b (organism): Please input one of Homo_sapiens, Mus_musculus, Bovine, Homo_sapiens and Drosophila_melanogaster.
-# -c (pvalue): pvalue threshold for GO enrichment analysis
-# -d (qvalue): qvalue threshold for GO enrichment analysis
+# -c (pvalue): pvalue threshold for GO enrichment analysis. The strict pvalue threshold is 0.01 (pvalue<0.01), and lenient threshold is 0.05 (pvalue<0.05).
+# -d (qvalue): qvalue threshold for GO enrichment analysis. The gold standard is 0.05.
 # -e (termNum): the number of terms for each ontology to be displayed
+# -g (adjust): the pvalue adjustment method for GO enrichment analysis. Please input one of holm, hochberg, hommel, bonferroni, BH, BY, fdr, none
 
 # cmd examples
 Rscript go_enrichment.R
-Rscript go_enrichment.R -i go_enrichment_test.txt -a bubble -b Mus_musculus -c 0.01 -e 10
+Rscript go_enrichment.R -i go_enrichment_test.txt -a bubble -b Mus_musculus -c 0.01 -e 10 -g BH
 ```
 
 #### KEGG Enrichment
@@ -192,13 +194,14 @@ Rscript go_enrichment.R -i go_enrichment_test.txt -a bubble -b Mus_musculus -c 0
 # -i (input): the path of input data file. The first column is gene symbol, and the column name is gene. The data file only needs the gene symbol if 'type' is bubble, otherwise needs to make sure that the data file has numeric data with the column name logFC to sort by the size of the value.
 # -a (type): the type of figure. Please input one of bubble, chord, and cluster.
 # -b (organism): Please input one of hsa, mmu, bos, and dme.
-# -c (pvalue): pvalue threshold for KEGG enrichment analysis
-# -d (qvalue): qvalue threshold for KEGG enrichment analysis
+# -c (pvalue): pvalue threshold for KEGG enrichment analysis. The strict pvalue threshold is 0.01 (pvalue<0.01), and lenient threshold is 0.05 (pvalue<0.05).
+# -d (qvalue): qvalue threshold for KEGG enrichment analysis. The gold standard is 0.05.
 # -e (termNum): the number of terms for each ontology to be displayed
+# -g (adjust): the pvalue adjustment method for KEGG enrichment analysis. Please input one of holm, hochberg, hommel, bonferroni, BH, BY, fdr, none
 
 # cmd examples
 Rscript kegg_enrichment.R
-Rscript kegg_enrichment.R -i kegg_enrichment_test.txt -a bubble -b dme -d 0.01 -e 10
+Rscript kegg_enrichment.R -i kegg_enrichment_test.txt -a bubble -b dme -d 0.01 -e 10 -g BH
 ```
 
 #### Dumbbell_Bar
@@ -224,12 +227,13 @@ Rscript dumbbell_bar.R -i dumbbell_test.txt -c dumbbell_barplot_test.txt -a numb
 # About cmd parameters
 # -i (expression_file): the path of expression file. The first column is row names, the first row is column names.
 # -k (info_file): the path of group information file. You need to make sure that the order of the samples in the expression file corresponds to the group info file order here. Keep the row names in the group file the same as the column names in the expression file: Control_1, Control_2, Treatment_1, Treatment_2. The Group file must contain a Group column, and the value of the group column must be 'Control' or 'Treatment'
-# -c (fc_thr): the log2FC threshold for differential expression analysis
-# -d (padj_thr): the padj threshold for differential expression analysis
+# -c (fc_thr): the log2FC threshold for differential expression analysis. If you wish to obtain stringent results, use 1.5, 2, or other strict thresholds (|log2FC| ≥ 1.5 or ≥ 2); conversely, use 0.58 or other lenient thresholds (|log2FC| ≥ 0.58).
+# -d (padj_thr): the padj threshold for differential expression analysis. If you wish to obtain stringent results, use 0.01 or other strict thresholds (padj < 0.01); conversely, use 0.05 or other lenient thresholds (padj < 0.05).
+# -e (correction): This argument defines hypothesis correction method. Please input one of none, BH, BY, holm, hochberg, hommel, or bonferroni
 
 # cmd examples
 Rscript DESeq2_read_count.R
-Rscript DESeq2_read_count.R -i expression.txt -k info.txt -c 2 -d 0.05
+Rscript DESeq2_read_count.R -i expression.txt -k info.txt -c 2 -d 0.05 -e BH
 ```
 
 #### limma for fpkm
@@ -239,13 +243,45 @@ Rscript DESeq2_read_count.R -i expression.txt -k info.txt -c 2 -d 0.05
 # About cmd parameters
 # -i (expression_file): the path of expression file. The first column is row names, the first row is column names.
 # -k (info_file): the path of group information file. You need to make sure that the order of the samples in the expression file corresponds to the group info file order here. Keep the row names in the group file the same as the column names in the expression file: Control_1, Control_2, Treatment_1, Treatment_2. The Group file must contain a Group column, and the value of the group column must be 'Control' or 'Treatment'
-# -c (fc_thr): the log2FC threshold for differential expression analysis
-# -d (padj_thr): the padj threshold for differential expression analysis
+# -c (fc_thr): the log2FC threshold for differential expression analysis. If you wish to obtain stringent results, use 1.5, 2, or other strict thresholds (|log2FC| ≥ 1.5 or ≥ 2); conversely, use 0.58 or other lenient thresholds (|log2FC| ≥ 0.58).
+# -d (padj_thr): the padj threshold for differential expression analysis. If you wish to obtain stringent results, use 0.01 or other strict thresholds (padj < 0.01); conversely, use 0.05 or other lenient thresholds (padj < 0.05).
+# -e (correction): This argument defines hypothesis correction method. Please input one of none, BH, BY, holm, hochberg, hommel, bonferroni
 
 # cmd examples
 Rscript limma_fpkm_df.R
-Rscript Rscript limma_fpkm_df.R -i expression.txt -k info.txt -c 2 -d 0.05
+Rscript limma_fpkm_df.R -i expression.txt -k info.txt -c 2 -d 0.05 -e BH
 ```
+
+#### PPI Network
+
+```bash
+# Note:
+# About cmd parameters
+# -i (input): the path of input data file. The first row is column name, and the first column is gene. The file can be consist of gene symbol, ENTREZID, or ENSEMBL
+# -a (type): this argument is the type of data, please input one of SYMBOL, ENTREZID, and ENSEMBL
+# -b (organism): this argument is the organism, please input one of Mus_musculus, Homo_sapiens, Drosophila_melanogaster, and Bos_taurus
+# -c (score_threshold): the interaction results were filtered according to the protein interaction scores
+# -d (plot_type): this parameter is the type of plot, please input one of linear, kk, and stress
+# -e (show_num): only genes with more than <show_num> nodes are shown in the plot
+
+# cmd examples
+Rscript ppi.R
+Rscript ppi.R -i ppi_example.txt -a SYMBOL -b Homo_sapiens -c 400 -d linear -e 5
+```
+
+
+
+### 5. **Hyperparameter optimization**
+
+1. kfold: Generally start by trying 3, 5, or 10; 5-fold cross-validation is commonly used.
+
+2. Dataset split ratio: Common train:validation:test set split ratios are 7:1.5:1.5 or 8:1:1. More training data is generally better.
+3. Batch size: Typically start by trying 32, 64, or 128. Smaller batch sizes usually provide better generalization but train slower. Larger batch sizes train faster but may overfit.
+4. Learning rate: Usually start training with 0.1, 0.01, 0.001, or 0.0001. Adjust the learning rate based on the Acc-loss curves. If the training loss curve does not decrease, try increasing the learning rate; if both training and validation loss curves plateau, it might be due to too small a learning rate or model convergence.
+5.  Optimizer: Adam has strong adaptability and is the default optimizer; SGD requires more fine-tuned learning rate adjustment; RMSprop performs well in RNNs and certain tasks. We recommend trying Adam first, then SGD if higher accuracy is needed.
+6. Loss Function: CrossEntropy is the standard loss for multi-class problems; NLLLoss is used with LogSoftmax; Focal Loss is used to address class imbalance issues. Users can choose the appropriate loss function based on the class distribution of their dataset.
+7. Epochs: Number of training rounds. Users can initially set a relatively large value (e.g., 200) to observe the loss and accuracy during training and determine when overfitting or underfitting starts. Reduce epochs if overfitting occurs, and increase epochs if underfitting occurs. Rely on early stopping mechanisms to prevent overfitting.
+8. Early stopping patience: Start by trying 5, 8, or 10. If the validation loss fluctuates significantly, increase the patience value.
 
 
 
@@ -274,7 +310,6 @@ docker-compose build
 docker-compose up -d
 ```
 
-## NOTE
-The complete document is available for download in Zenodo (DOI: 10.5281/zenodo.15294581).
 
+## NOTE
 AutoMATA to be free to academia, charge for industry.
