@@ -22,7 +22,7 @@ from torch.nn.init import kaiming_uniform_, xavier_uniform_
 from sklearn.model_selection import  StratifiedKFold
 import pandas as pd
 import os
-os.chdir(os.path.dirname(__file__))
+# os.chdir(os.path.dirname(__file__))
 import torch
 from sklearn.metrics import accuracy_score,recall_score,precision_score,f1_score,matthews_corrcoef,confusion_matrix,roc_auc_score,classification_report,multilabel_confusion_matrix,hamming_loss
 from utils.plot_utils import plotfig
@@ -40,7 +40,7 @@ from DataProcess import load_data
 
 
 
-def test(dataloader, model):
+def test(dataloader, model, device):
     model.eval()
     true_label_list, pred_label_list, probability_list= [], [], []
 
@@ -52,9 +52,14 @@ def test(dataloader, model):
                 X, y = X.to(device), y.to(device) 
             pred = model(X)
 
+            if hasattr(model, 'loss_function') and model.loss_function == 'nllloss':
+                probs = pred.exp()  # log_softmax -> softmax
+            else:
+                probs = F.softmax(pred, dim=1)  # logits -> softmax
+            max_prob, max_idx = probs.max(dim=1)
             true_label_list.append(y.cpu().detach().numpy())
-            pred_label_list.append(pred.argmax(dim=1).cpu().detach().numpy())
-            probability_list.append(pred[:,1].cpu().detach().numpy())
+            pred_label_list.append(max_idx.cpu().detach().numpy())
+            probability_list.append(max_prob.cpu().detach().numpy())
 
     y_true = np.concatenate(true_label_list)
     y_pred = np.concatenate(pred_label_list)
@@ -62,9 +67,9 @@ def test(dataloader, model):
     acc = accuracy_score(y_true,y_pred)
     precision, recall, f1 = precision_recall_fscore_support(y_true, y_pred, average='macro')[:-1]
 
-    return acc, precision, recall, f1, y_prob
+    return acc, precision, recall, f1, y_prob, y_pred  # 一审
 
-def extract_features(autoencoder, dataloader):
+def extract_features(autoencoder, dataloader, device):
     encoder = autoencoder.encoder
     features = []
     labels = []
@@ -84,8 +89,8 @@ def extract_features(autoencoder, dataloader):
     return loader
 
 
-def test_autoencoder(dataloader, autoencoder, classifier):
-    loader = extract_features(autoencoder, dataloader) 
+def test_autoencoder(dataloader, autoencoder, classifier, device):
+    loader = extract_features(autoencoder, dataloader, device) 
     true_label_list, pred_label_list, probability_list= [], [], []
 
     classifier.eval()
@@ -93,9 +98,14 @@ def test_autoencoder(dataloader, autoencoder, classifier):
         for data in loader:
             features, labels = data[0].to(device), data[1].to(device)
             outputs = classifier(features)
+            if hasattr(classifier, 'loss_function') and model.loss_function == 'nllloss':
+                probs = outputs.exp()
+            else:
+                probs = F.softmax(outputs, dim=1)  # logits -> softmax
+            max_prob, max_idx = probs.max(dim=1)
             true_label_list.append(labels.cpu().detach().numpy())
-            pred_label_list.append(outputs.argmax(dim=1).cpu().detach().numpy())
-            probability_list.append(outputs[:,1].cpu().detach().numpy())
+            pred_label_list.append(max_idx.cpu().detach().numpy())
+            probability_list.append(max_prob.cpu().detach().numpy())
 
     y_true = np.concatenate(true_label_list)
     y_pred = np.concatenate(pred_label_list)
@@ -104,7 +114,7 @@ def test_autoencoder(dataloader, autoencoder, classifier):
     acc = accuracy_score(y_true,y_pred)
     precision, recall, f1 = precision_recall_fscore_support(y_true, y_pred, average='macro')[:-1]
 
-    return acc, precision, recall, f1, y_prob
+    return acc, precision, recall, f1, y_prob, y_pred  # 一审
 
 
 
@@ -151,6 +161,7 @@ class Classifier(nn.Module):
         )
 
         self.learning_rate = lr
+        self.loss_function = loss_function  # 一审
         if loss_function == "crossentropy":
             self.criterion = nn.CrossEntropyLoss()
         elif loss_function == "focalloss":
@@ -169,10 +180,11 @@ class Classifier(nn.Module):
             self.optimizer = optim.RMSprop(self.parameters(), lr=self.learning_rate)
 
     def forward(self, x):
-        if (self.output_size == 2):
-            act = nn.Softmax(dim=1).to(device)
-            x = act(x)
-        return self.fc(x)
+        # 一审
+        logits = self.fc(x)
+        if self.loss_function == "nllloss":
+            return nn.functional.log_softmax(logits, dim=1)
+        return logits
 
 class LSTMModel(nn.Module):
     def __init__(self, input_size, hidden_size, output_size, num_layers=1):
@@ -185,6 +197,7 @@ class LSTMModel(nn.Module):
 
 
         self.learning_rate = lr
+        self.loss_function = loss_function  # 一审
         if loss_function == "crossentropy":
             self.criterion = nn.CrossEntropyLoss()
         elif loss_function == "focalloss":
@@ -208,10 +221,9 @@ class LSTMModel(nn.Module):
         out, _ = self.lstm(x, (h0, c0))
         out = self.fc(out[:, -1, :])
 
-        if (self.output_size == 2):
-            act = nn.Softmax(dim=1).to(device)
-            out = act(out)
-
+        # 一审
+        if self.loss_function == "nllloss":
+            return F.log_softmax(out, dim=1)
         return out
 
 class Cnn(nn.Module):
@@ -233,6 +245,8 @@ class Cnn(nn.Module):
         )
         
         self.learning_rate = lr
+        self.loss_function = loss_function  # 一审
+        self.fc = nn.LazyLinear(self.output_size)  # 一审
         if loss_function == "crossentropy":
             self.criterion = nn.CrossEntropyLoss()
         elif loss_function == "focalloss":
@@ -254,13 +268,18 @@ class Cnn(nn.Module):
         input = input.reshape(-1,1,input.shape[1])
         x = self.model1(input)
         x = self.model2(x)
-
-        fc = nn.Linear(in_features=x.shape[1], out_features=output_size, bias=True).to(device)
-        x = fc(x)
-        if (self.output_size == 2):
-            act = nn.Softmax(dim=1).to(device)
-            x = act(x)
-        return x
+        device = next(self.parameters()).device
+        # 一审
+        logits = self.fc(x)
+        if self.loss_function == "nllloss":
+            return nn.functional.log_softmax(logits, dim=1)
+        return logits
+        # fc = nn.Linear(in_features=x.shape[1], out_features=output_size, bias=True).to(device)
+        # x = fc(x)
+        # if (self.output_size == 2):
+        #     act = nn.Softmax(dim=1).to(device)
+        #     x = act(x)
+        # return x
 
 
 class MLPModel(nn.Module):
@@ -278,6 +297,7 @@ class MLPModel(nn.Module):
         xavier_uniform_(self.hidden3.weight)
 
         self.learning_rate = lr
+        self.loss_function = loss_function  # 一审
         if loss_function == "crossentropy":
             self.criterion = nn.CrossEntropyLoss()
         elif loss_function == "focalloss":
@@ -302,9 +322,9 @@ class MLPModel(nn.Module):
         X = self.act2(X)
         X = self.dropout(X)
         X = self.hidden3(X)
-        if (self.output_size == 2):
-            act = nn.Softmax(dim=1).to(device)
-            X = act(X)
+        # 一审
+        if self.loss_function == "nllloss":
+            return F.log_softmax(X, dim=1)
         return X
 
 
@@ -319,6 +339,7 @@ class RBFN(nn.Module):
         self.linear = nn.Linear(self.centers_dim, self.out_dim)
 
         self.learning_rate = lr
+        self.loss_function = loss_function  # 一审
         if loss_function == "crossentropy":
             self.criterion = nn.CrossEntropyLoss()
         elif loss_function == "focalloss":
@@ -342,9 +363,9 @@ class RBFN(nn.Module):
         gauss = torch.exp(-distance ** 2 / (2 * self.sigma ** 2))
         y=self.linear(gauss)
 
-        if (self.out_dim == 2):
-            act = nn.Softmax(dim=1).to(device)  
-            y = act(y)
+        # 一审
+        if self.loss_function == "nllloss":
+            return nn.functional.log_softmax(y, dim=1)
         return y
     
 
@@ -358,6 +379,7 @@ class RNNModel(nn.Module):
         self.output_size = output_size
 
         self.learning_rate = lr
+        self.loss_function = loss_function  # 一审
         if loss_function == "crossentropy":
             self.criterion = nn.CrossEntropyLoss()
         elif loss_function == "focalloss":
@@ -382,9 +404,9 @@ class RNNModel(nn.Module):
         out, hidden = self.rnn(x, h0)
         out = self.fc(out[:, -1, :])
 
-        if (self.output_size == 2):
-            act = nn.Softmax(dim=1).to(device)  
-            out = act(out)
+        # 一审
+        if self.loss_function == "nllloss":
+            return F.log_softmax(out, dim=1)
         return out
 
 
@@ -423,6 +445,7 @@ class TransformerModel(nn.Module):
         self.softmax = nn.Softmax(dim=1)
 
         self.learning_rate = lr
+        self.loss_function = loss_function
         if loss_function == "crossentropy":
             self.criterion = nn.CrossEntropyLoss()
         elif loss_function == "focalloss":
@@ -449,9 +472,9 @@ class TransformerModel(nn.Module):
         output = torch.mean(output, dim=1) 
         output = self.fc(output) 
 
-        if (self.output_size == 2):
-            output = self.softmax(output)
-        
+        # 一审
+        if self.loss_function == "nllloss":
+            return F.log_softmax(output, dim=1)
         return output
 
 
@@ -487,7 +510,7 @@ if __name__ == "__main__":
         dropout_rate = checkpoint['dropout_rate']
         lr = checkpoint['learning_rate']
 
-        encoder = Autoencoder(input_dim, hidden_size_1, hidden_size_2, hidden_size_3, lr, dropout_rate)
+        encoder = Autoencoder(input_dim, hidden_size_1, hidden_size_2, hidden_size_3, lr, dropout_rate).to(device)
         encoder.load_state_dict(checkpoint['model_state_dict'])
 
         savename = args.model_path
@@ -496,7 +519,7 @@ if __name__ == "__main__":
         output_size = checkpoint_cls['output_size']
         loss_function = checkpoint_cls['loss_function']
         optimizer_function = checkpoint_cls['optimizer_function']
-        classifier = Classifier(hidden_size_3, cls_hidden_size, output_size, lr, loss_function, optimizer_function)
+        classifier = Classifier(hidden_size_3, cls_hidden_size, output_size, lr, loss_function, optimizer_function).to(device)
         classifier.load_state_dict(checkpoint_cls['model_state_dict'])
 
     elif (model_type == 'CNN'):
@@ -510,7 +533,7 @@ if __name__ == "__main__":
         conv_size_1 = checkpoint['conv_size_1']
         conv_size_2 = checkpoint['conv_size_2']
 
-        model = Cnn(conv_size_1, conv_size_2, output_size, dropout_rate, lr, loss_function, optimizer_function)
+        model = Cnn(conv_size_1, conv_size_2, output_size, dropout_rate, lr, loss_function, optimizer_function).to(device)
         model.load_state_dict(checkpoint['model_state_dict'])
 
     elif (model_type == 'LSTM'):
@@ -575,7 +598,7 @@ if __name__ == "__main__":
         num_layers = checkpoint['num_layers']
         dim_feedforward = checkpoint['dim_feedforward']
         lr = checkpoint['learning_rate']
-        model = TransformerModel(input_dim, output_size, d_model, nhead, num_layers, dim_feedforward, dropout, loss_function, optimizer_function)
+        model = TransformerModel(input_dim, output_size, d_model, nhead, num_layers, dim_feedforward, dropout, loss_function, optimizer_function).to(device)
         model.load_state_dict(checkpoint['model_state_dict'])
 
 
@@ -584,10 +607,11 @@ if __name__ == "__main__":
     test_dataset =  torch.utils.data.TensorDataset(X_test, Y_test)
     test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False)
 
+    # 一审
     if (model_type == 'AutoEncoder'):
-        acc, precision, recall, f1, y_prob = test_autoencoder(dataloader=test_loader, autoencoder = encoder, classifier = classifier)
+        acc, precision, recall, f1, y_prob, y_pred = test_autoencoder(dataloader=test_loader, autoencoder = encoder, classifier = classifier, device=device)
     else:
-        acc, precision, recall, f1, y_prob = test(dataloader=test_loader, model=model)
+        acc, precision, recall, f1, y_prob, y_pred = test(dataloader=test_loader, model=model, device=device)
     print("test acc = {}, precision = {}, recall = {}, f1 = {}".format(acc, precision, recall, f1))
 
     '''save the testing metrics results of using this model'''
@@ -601,6 +625,7 @@ if __name__ == "__main__":
 
     '''save the probability results of using this model'''
     with open("./result/test_result.txt", mode="w") as f:
-        f.write("name" + "\t" + "probability" + "\n")
+        # 一审
+        f.write("name" + "\t" + "max_probability" + "\t" + "predicted_label" + "\n")
         for i in range(len(name)):
-            f.write(name[i] + "\t" + str(y_prob[i]) + "\n")
+            f.write(name[i] + "\t" + str(y_prob[i]) + "\t" + str(y_pred[i]) + "\n")

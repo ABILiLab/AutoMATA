@@ -1,4 +1,4 @@
-import shutup  # 控制台输出 忽略 warning
+import shutup 
 shutup.please()
 
 from sklearn.utils import shuffle
@@ -12,7 +12,6 @@ import torch
 
 
 warnings.simplefilter(action='ignore', category=RuntimeWarning)
-torch.manual_seed(2022)
 
 
 def load_data(state="train"):  # train, val, test
