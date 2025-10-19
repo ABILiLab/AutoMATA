@@ -10,7 +10,7 @@ from torch import nn, optim
 from utils.FocalLoss import FocalLoss
 from sklearn.model_selection import  StratifiedKFold
 import os
-os.chdir(os.path.dirname(__file__))
+# os.chdir(os.path.dirname(__file__))
 import torch
 from sklearn.metrics import accuracy_score
 from utils.plot_utils import plotfig
@@ -20,12 +20,22 @@ import pickle
 
 
 warnings.simplefilter(action='ignore', category=RuntimeWarning)
-torch.manual_seed(2022)
 
 
 
 
 from DataProcess import load_data,process
+
+# 一审
+def set_random_seed(seed):
+    """设置随机种子确保可重现性"""
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    np.random.seed(seed)
+    torch.Generator().manual_seed(seed)  # dataloader的随机种子
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
 
 
 def train(dataloader, model):
@@ -76,7 +86,7 @@ def validate(dataloader, model):
 
     return val_loss, val_acc, val_precision, val_recall, val_f1
 
-def test(dataloader, model):
+def test(dataloader, model, device):
     model.eval()
     true_label_list, pred_label_list= [], []
 
@@ -112,8 +122,13 @@ class Cnn(nn.Module):
             nn.Flatten(),
             nn.Dropout(dropout_rate)
         )
+
+        
+        
         
         self.learning_rate = lr
+        self.fc = nn.LazyLinear(self.output_size)  # 一审
+        self.loss_function = loss_function  # 一审
         if loss_function == "crossentropy":
             self.criterion = nn.CrossEntropyLoss()
         elif loss_function == "focalloss":
@@ -135,27 +150,25 @@ class Cnn(nn.Module):
         input = input.reshape(-1,1,input.shape[1])
         x = self.model1(input)
         x = self.model2(x)
-
-        fc = nn.Linear(in_features=x.shape[1], out_features=self.output_size, bias=True).to(device)
-        x = fc(x)
-        if (self.output_size == 2):
-            act = nn.Softmax(dim=1).to(device)
-            x = act(x)
-        return x
+        # 一审
+        logits = self.fc(x)
+        if self.loss_function == "nllloss":
+            return nn.functional.log_softmax(logits, dim=1)
+        return logits
 
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--kfold", default=0, type=int, help='a number represents kfold, 0 means not use kfold') 
     parser.add_argument("--ratio", default="0", type=str, help='a dataset is split into train, validation and test datasets by ratio, and the seperator is :, e.g. 8:1:1, 0 means not use split')  # "0" 表示不使用split，值只能以:分割，e.g. 8:1:1 新加
-    parser.add_argument("--epochs", default=50, type=int, help='number of epochs')
+    parser.add_argument("--epochs", default=10, type=int, help='number of epochs')
     parser.add_argument("--es", default=10, type=int, help='early stopping patience')
     parser.add_argument("--lr", default=0.01, type=float, help='learning rate')
     parser.add_argument("--bs", default=32, type=int, help="batch size")
     parser.add_argument("--loss_function", default="crossentropy", type=str, help='Options: crossentropy, nllloss, focalloss') 
     parser.add_argument("--optimizer_function", default="adam", type=str, help='Options: adam, rmsprop, sgd') 
     parser.add_argument("--output_size", default=2, type=int, help='label number. e.g. 2 for binary classification, 4 for 4-class classification. The range is [2, 7]') 
-
+    parser.add_argument('--random_seed', type=int, default=42, help='random seed')  # 一审新增
 
     args = parser.parse_args()
     kfold = args.kfold
@@ -167,6 +180,7 @@ if __name__ == "__main__":
     loss_function = args.loss_function
     optimizer_function = args.optimizer_function
     output_size = args.output_size
+    random_seed = args.random_seed  # 一审新增
 
     print('model = CNN')
     print('kfold =', kfold)
@@ -178,6 +192,7 @@ if __name__ == "__main__":
     print('loss function =', loss_function)
     print('optimizer function =', optimizer_function)
     print('label number =', output_size)
+    print('random seed =', random_seed)  # 一审新增
 
     # Convolution kernel size, user can change it.
     conv_size_1 = 64
@@ -186,12 +201,12 @@ if __name__ == "__main__":
 
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    
+    set_random_seed(random_seed)  # 一审新增
     result_path = './result/'
     if not os.path.exists(result_path):
         os.makedirs(result_path)
 
-    savename = result_path + 'model.pthh'
+    savename = result_path + 'model.pth'
     early_stopping = EarlyStopping(es, verbose=True, savename=savename, delta=0.0001)
 
     # need split a dataset into train, validation and test datasets by ratio
@@ -245,9 +260,9 @@ if __name__ == "__main__":
                     break
 
             print("--------The {} fold validation result---------".format(i+1))
-            val_acc, val_precision, val_recall, val_f1 = test(dataloader=val_loader, model=cnn)
+            val_acc, val_precision, val_recall, val_f1 = test(dataloader=val_loader, model=cnn, device=device)
             print("validation acc = {}, precision = {}, recall = {}, f1 = {}".format(round(val_acc, 4), round(val_precision, 4), round(val_recall, 4), round(val_f1, 4)))
-            kfscore.append(test(dataloader=val_loader, model=cnn))
+            kfscore.append(test(dataloader=val_loader, model=cnn, device=device))
         
         # average score
         kfscore = np.array(kfscore).sum(axis= 0)/float(kfold)  # acc, precision, recall, f1
@@ -326,7 +341,7 @@ if __name__ == "__main__":
     test_dataset =  torch.utils.data.TensorDataset(X_test, Y_test)
     test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=True)
 
-    acc, precision, recall, f1 = test(dataloader=test_loader, model=cnn)
+    acc, precision, recall, f1 = test(dataloader=test_loader, model=cnn, device=device)
     print("test acc = {}, precision = {}, recall = {}, f1 = {}".format(acc, precision, recall, f1))
 
     # save test result

@@ -6,7 +6,7 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 import numpy as np
 import os
-os.chdir(os.path.dirname(__file__))
+# os.chdir(os.path.dirname(__file__))
 import pickle
 import matplotlib.pyplot as plt
 from sklearn.model_selection import  StratifiedKFold
@@ -66,6 +66,7 @@ class Classifier(nn.Module):  # 16, 8, 2
         )
 
         self.learning_rate = lr
+        self.loss_function = loss_function  # 一审
         if loss_function == "crossentropy":
             self.criterion = nn.CrossEntropyLoss()
         elif loss_function == "focalloss":
@@ -84,10 +85,11 @@ class Classifier(nn.Module):  # 16, 8, 2
             self.optimizer = optim.RMSprop(self.parameters(), lr=self.learning_rate)
 
     def forward(self, x):
-        if (self.output_size == 2):
-            act = nn.Softmax(dim=1).to(device)
-            x = act(x)
-        return self.fc(x)
+        # 一审
+        logits = self.fc(x)
+        if self.loss_function == "nllloss":
+            return nn.functional.log_softmax(logits, dim=1)
+        return logits
 
 
 
@@ -165,7 +167,7 @@ def val_classifier(classifier, dataloader):
     return val_loss, val_acc, val_precision, val_recall, val_f1
 
 
-def extract_features(autoencoder, dataloader):
+def extract_features(autoencoder, dataloader, device):
     encoder = autoencoder.encoder
     features = []
     labels = []
@@ -197,10 +199,20 @@ def load_model(autoencoder, classifier, autoencoder_path, classifier_path):
     classifier.load_state_dict(torch.load(classifier_path))
     print("model load successfully!")
 
+# 一审
+def set_random_seed(seed):
+    """设置随机种子确保可重现性"""
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    np.random.seed(seed)
+    torch.Generator().manual_seed(seed)  # dataloader的随机种子
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
 
 # test model
-def test(dataloader, autoencoder, classifier):
-    loader = extract_features(autoencoder, dataloader) 
+def test(dataloader, autoencoder, classifier, device):
+    loader = extract_features(autoencoder, dataloader, device) 
     true_label_list, pred_label_list= [], []
 
     classifier.eval()
@@ -231,7 +243,7 @@ if __name__ == '__main__':
     parser.add_argument("--loss_function", default="crossentropy", type=str, help='Options: crossentropy, nllloss, focalloss') 
     parser.add_argument("--optimizer_function", default="adam", type=str, help='Options: adam, rmsprop, sgd') 
     parser.add_argument("--output_size", default=2, type=int, help='label number. e.g. 2 for binary classification, 4 for 4-class classification. The range is [2, 7]') 
-
+    parser.add_argument('--random_seed', type=int, default=42, help='随机种子')  # 一审新增
 
     args = parser.parse_args()
     kfold = args.kfold
@@ -243,7 +255,7 @@ if __name__ == '__main__':
     loss_function = args.loss_function
     optimizer_function = args.optimizer_function
     output_size = args.output_size
-
+    
     print('model = AutoEncoder')
     print('kfold =', kfold)
     print('ratio =', ratio)
@@ -254,6 +266,9 @@ if __name__ == '__main__':
     print('loss function =', loss_function)
     print('optimizer function =', optimizer_function)
     print('label number =', output_size)
+    random_seed = args.random_seed  # 一审新增
+    print('random seed =', random_seed)  # 一审新增
+    set_random_seed(random_seed)  # 一审新增
 
     # the hidden size of the autoencoder, user can change it.
     hidden_size_1=64
@@ -332,8 +347,8 @@ if __name__ == '__main__':
             train_loss_s_cls = []  # Store the training loss of each epoch
             print("--------Training Classifier--------")
             # Extracting training/validation set features using trained Autoencoder
-            train_loader = extract_features(autoencoder, train_loader)
-            val_loader = extract_features(autoencoder, val_loader)
+            train_loader = extract_features(autoencoder, train_loader, device)
+            val_loader = extract_features(autoencoder, val_loader, device)
             
             for t in range(epochs):
                 print("--------Begin the {} epoch training---------".format(t+1))
@@ -407,8 +422,8 @@ if __name__ == '__main__':
         train_loss_s_cls = [] 
         print("--------Training Classifier--------")
         # Extracting training set features using trained Autoencoder
-        train_loader = extract_features(autoencoder, train_loader)
-        val_loader = extract_features(autoencoder, val_loader)
+        train_loader = extract_features(autoencoder, train_loader, device)
+        val_loader = extract_features(autoencoder, val_loader, device)
         
         for t in range(epochs):
             print("--------Begin the {} epoch training---------".format(t+1))
@@ -476,7 +491,7 @@ if __name__ == '__main__':
     X_test, Y_test = load_data("test")
     test_dataset =  torch.utils.data.TensorDataset(X_test, Y_test)
     test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=True)
-    acc, precision, recall, f1 = test(dataloader=test_loader, autoencoder = autoencoder, classifier = classifier)
+    acc, precision, recall, f1 = test(dataloader=test_loader, autoencoder = autoencoder, classifier = classifier, device=device)
     print("test acc = {}, precision = {}, recall = {}, f1 = {}".format(acc, precision, recall, f1))
 
     # save test result

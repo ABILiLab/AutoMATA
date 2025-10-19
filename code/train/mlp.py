@@ -22,7 +22,7 @@ from torch.nn import Linear, ReLU, Sigmoid, Module, BCELoss, Softmax
 from torch.nn.init import kaiming_uniform_, xavier_uniform_
 import pandas as pd
 import os
-os.chdir(os.path.dirname(__file__))
+# os.chdir(os.path.dirname(__file__))
 import torch
 from sklearn.metrics import accuracy_score,recall_score,precision_score,f1_score,matthews_corrcoef,confusion_matrix,roc_auc_score,classification_report,multilabel_confusion_matrix,hamming_loss
 from utils.plot_utils import plotfig
@@ -31,9 +31,20 @@ import argparse
 import pickle
 
 warnings.simplefilter(action='ignore', category=RuntimeWarning)
-torch.manual_seed(2022)
+
 
 from DataProcess import load_data,process
+
+# 一审
+def set_random_seed(seed):
+    """设置随机种子确保可重现性"""
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    np.random.seed(seed)
+    torch.Generator().manual_seed(seed)  # dataloader的随机种子
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
 
 def train(dataloader, model):
     model.train()
@@ -85,7 +96,7 @@ def validate(dataloader, model):
 
     return val_loss, val_acc, val_precision, val_recall, val_f1
 
-def test(dataloader, model):
+def test(dataloader, model, device):
     model.eval()
     true_label_list, pred_label_list= [], []
 
@@ -120,6 +131,7 @@ class MLPModel(nn.Module):
         xavier_uniform_(self.hidden3.weight)
 
         self.learning_rate = lr
+        self.loss_function = loss_function  # 一审
         if loss_function == "crossentropy":
             self.criterion = nn.CrossEntropyLoss()
         elif loss_function == "focalloss":
@@ -144,10 +156,9 @@ class MLPModel(nn.Module):
         X = self.act2(X)
         X = self.dropout(X)
         X = self.hidden3(X)
-        if (self.output_size == 2):
-            act = nn.Softmax(dim=1).to(device)
-            X = act(X)
-
+        # 一审
+        if self.loss_function == "nllloss":
+            return F.log_softmax(X, dim=1)
         return X
 
 
@@ -163,6 +174,7 @@ if __name__ == "__main__":
     parser.add_argument("--loss_function", default="crossentropy", type=str, help='Options: crossentropy, nllloss, focalloss') 
     parser.add_argument("--optimizer_function", default="adam", type=str, help='Options: adam, rmsprop, sgd') 
     parser.add_argument("--output_size", default=2, type=int, help='label number. e.g. 2 for binary classification, 4 for 4-class classification. The range is [2, 7]') 
+    parser.add_argument('--random_seed', type=int, default=42, help='random seed')  # 一审新增
 
     args = parser.parse_args()
     kfold = args.kfold
@@ -185,6 +197,9 @@ if __name__ == "__main__":
     print('loss function =', loss_function)
     print('optimizer function =', optimizer_function)
     print('label number =', output_size)
+    random_seed = args.random_seed  # 一审新增
+    print('random seed =', random_seed)  # 一审新增
+    set_random_seed(random_seed)  # 一审新增
 
     # user can change it.
     linear_size_1 = 64
@@ -251,9 +266,9 @@ if __name__ == "__main__":
                     break
             
             print("--------The {} fold validation result---------".format(i+1))
-            val_acc, val_precision, val_recall, val_f1 = test(dataloader=val_loader, model=mlp)
+            val_acc, val_precision, val_recall, val_f1 = test(dataloader=val_loader, model=mlp, device=device)
             print("validation acc = {}, precision = {}, recall = {}, f1 = {}".format(round(val_acc, 4), round(val_precision, 4), round(val_recall, 4), round(val_f1, 4)))
-            kfscore.append(test(dataloader=val_loader, model=mlp))
+            kfscore.append(test(dataloader=val_loader, model=mlp, device=device))
         
         # average score
         kfscore = np.array(kfscore).sum(axis= 0)/float(kfold)  # acc, precision, recall, f1
@@ -334,7 +349,7 @@ if __name__ == "__main__":
     test_dataset =  torch.utils.data.TensorDataset(X_test, Y_test)
     test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=True)
 
-    acc, precision, recall, f1 = test(dataloader=test_loader, model=mlp)
+    acc, precision, recall, f1 = test(dataloader=test_loader, model=mlp, device=device)
     print("test acc = {}, precision = {}, recall = {}, f1 = {}".format(acc, precision, recall, f1))
 
     # save test result

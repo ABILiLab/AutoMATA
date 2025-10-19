@@ -23,7 +23,7 @@ from sklearn.model_selection import  StratifiedKFold
 # from torch.utils.tensorboard import SummaryWriter
 import pandas as pd
 import os
-os.chdir(os.path.dirname(__file__))
+# os.chdir(os.path.dirname(__file__))
 import torch
 from sklearn.metrics import accuracy_score,recall_score,precision_score,f1_score,matthews_corrcoef,confusion_matrix,roc_auc_score,classification_report,multilabel_confusion_matrix,hamming_loss
 from utils.plot_utils import plotfig
@@ -36,7 +36,17 @@ torch.manual_seed(2022)
 
 from DataProcess import load_data,process
 
-
+# 一审
+def set_random_seed(seed):
+    """设置随机种子确保可重现性"""
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    np.random.seed(seed)
+    torch.Generator().manual_seed(seed)  # dataloader的随机种子
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+    
 def train(dataloader, model):
     model.train()
     num_batches = len(dataloader)
@@ -45,6 +55,7 @@ def train(dataloader, model):
 
     for data in dataloader:
         X_data, Y_data = data[0].to(device), data[1].to(device) 
+        print("train data =", X_data)
         output = model(X_data)        
         loss = model.criterion(output, Y_data)
 
@@ -88,7 +99,7 @@ def validate(dataloader, model):
 
     return val_loss, val_acc, val_precision, val_recall, val_f1
 
-def test(dataloader, model):
+def test(dataloader, model, device):
     model.eval()
     true_label_list, pred_label_list= [], []
 
@@ -142,6 +153,7 @@ class TransformerModel(nn.Module):
         self.softmax = nn.Softmax(dim=1)
 
         self.learning_rate = lr
+        self.loss_function = loss_function
         if loss_function == "crossentropy":
             self.criterion = nn.CrossEntropyLoss()
         elif loss_function == "focalloss":
@@ -167,9 +179,9 @@ class TransformerModel(nn.Module):
         output = output.permute(1, 0, 2) 
         output = torch.mean(output, dim=1) 
         output = self.fc(output) 
-        if (self.output_size == 2):
-            output = self.softmax(output)
-        
+        # 一审
+        if self.loss_function == "nllloss":
+            return F.log_softmax(output, dim=1)
         return output
 
 if __name__ == "__main__":
@@ -184,6 +196,7 @@ if __name__ == "__main__":
     parser.add_argument("--loss_function", default="crossentropy", type=str, help='Options: crossentropy, nllloss, focalloss') 
     parser.add_argument("--optimizer_function", default="adam", type=str, help='Options: adam, rmsprop, sgd') 
     parser.add_argument("--output_size", default=2, type=int, help='label number. e.g. 2 for binary classification, 4 for 4-class classification. The range is [2, 7]') 
+    parser.add_argument('--random_seed', type=int, default=42, help='random seed')  # 一审新增
 
 
     args = parser.parse_args()
@@ -207,6 +220,9 @@ if __name__ == "__main__":
     print('loss function =', loss_function)
     print('optimizer function =', optimizer_function)
     print('label number =', output_size)
+    random_seed = args.random_seed  # 一审新增
+    print('random seed =', random_seed)  # 一审新增
+    set_random_seed(random_seed)  # 一审新增
 
     # user can change it.
     dropout = 0.0 
@@ -272,9 +288,9 @@ if __name__ == "__main__":
                     break
 
             print("--------The {} fold validation result---------".format(i+1))
-            val_acc, val_precision, val_recall, val_f1 = test(dataloader=val_loader, model=model)
+            val_acc, val_precision, val_recall, val_f1 = test(dataloader=val_loader, model=model, device=device)
             print("validation acc = {}, precision = {}, recall = {}, f1 = {}".format(round(val_acc, 4), round(val_precision, 4), round(val_recall, 4), round(val_f1, 4)))
-            kfscore.append(test(dataloader=val_loader, model=model))
+            kfscore.append(test(dataloader=val_loader, model=model, device=device))
         
         # average score
         kfscore = np.array(kfscore).sum(axis= 0)/float(kfold)  # acc, precision, recall, f1
@@ -358,7 +374,7 @@ if __name__ == "__main__":
     test_dataset =  torch.utils.data.TensorDataset(X_test, Y_test)
     test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=True)
 
-    acc, precision, recall, f1 = test(dataloader=test_loader, model=model)
+    acc, precision, recall, f1 = test(dataloader=test_loader, model=model, device=device)
     print("test acc = {}, precision = {}, recall = {}, f1 = {}".format(acc, precision, recall, f1))
 
     # save test result

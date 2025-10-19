@@ -10,7 +10,7 @@ import numpy as np
 from torch.autograd import Variable
 import os
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
-os.chdir(os.path.dirname(__file__))
+# os.chdir(os.path.dirname(__file__))
 import numpy as np
 import pylab as pl
 import math

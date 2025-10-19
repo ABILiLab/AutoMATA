@@ -28,7 +28,8 @@ def load_data(state="train"):  # load train/val/test dataset
     # Delete the first column of data
     data = data.iloc[:, 1:]
     # confuse data
-    data = shuffle(data, random_state=2024)
+    # data = shuffle(data, random_state=2024)  # 一审
+    data = data.dropna()  # 一审
     # get feature and label
     feature = data.iloc[:,:-1].values.astype(float) 
     label = data.iloc[:,-1].values.astype(int)
@@ -49,8 +50,11 @@ def process(ratio="8:1:1"):
     train_ratio = ratio_num[0] / sum(ratio_num)
     test_ratio = ratio_num[2] / sum(ratio_num[1:])
 
-    train_data, res_data = train_test_split(data, test_size=1-train_ratio, random_state=42, stratify=data[["Label"]])
-    val_data, test_data = train_test_split(res_data, test_size=test_ratio, random_state=42, stratify=res_data[["Label"]])
+    # train_data, res_data = train_test_split(data, test_size=1-train_ratio, random_state=42, stratify=data[["Label"]])
+    # val_data, test_data = train_test_split(res_data, test_size=test_ratio, random_state=42, stratify=res_data[["Label"]])
+    # 一审
+    train_data, res_data = train_test_split(data, test_size=1-train_ratio, stratify=data[["Label"]], shuffle=False)
+    val_data, test_data = train_test_split(res_data, test_size=test_ratio, stratify=res_data[["Label"]], shuffle=False)
 
     # save
     train_data.to_csv("../../data/train_example/20240808232043_OtJF37SH_data.txt", sep="\t", index=False)
