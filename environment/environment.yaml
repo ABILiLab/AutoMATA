@@ -103,6 +103,7 @@ dependencies:
       - pytz==2025.2
       - scikit-learn==0.24.2
       - scipy==1.5.4
+      - seaborn==0.11.2
       - shutup==0.2.0
       - threadpoolctl==3.1.0
 prefix: /opt/anaconda/envs/automata
