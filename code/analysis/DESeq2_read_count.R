@@ -8,7 +8,9 @@ option_list <- list(
   make_option(c("-i", "--expression_file"), type="character", default="../../data/analysis_example/expression_read_count.txt", action="store", help="This argument is expression file path"),
   make_option(c("-k", "--info_file"), type="character", default="../../data/analysis_example/group_info_read_count.txt", action="store", help="This argument is group information file path"),
   make_option(c("-c", "--fc_thr"), type="double", action="store", default="1", help="This argument decides log2FC threshold for differential expression analysis"),
-  make_option(c("-d", "--padj_thr"), type="double", action="store", default="1", help="This argument decides padj threshold for differential expression analysis")
+  make_option(c("-d", "--padj_thr"), type="double", action="store", default="1", help="This argument decides padj threshold for differential expression analysis"),
+  make_option(c("-e", "--correction"), type="character", action="store", default="BH", help="This argument defines hypothesis correction method, including none, BH, BY, holm, hochberg, hommel, or bonferroni")
+
 )
 opt = parse_args(OptionParser(option_list = option_list, usage = "This Script is to conduct differential expression analysis and generate volcano and cluster plots!", add_help_option=FALSE))
 
@@ -20,10 +22,30 @@ padj_thr <- opt$padj_thr
 # NOTE: 1. You need to make sure that the order of the samples in the expression file corresponds to the group info file order here
 #       2. Keep the row names in the group file the same as the column names in the expression file: Control_1, Control_2, Treatment_1, Treatment_2
 #       3. The Group file must contain a Group column, and the value of the group column must be 'Control' or 'Treatment'
-counts <- read.table(opt$expression_file, row.names = 1, header = TRUE, sep = "\t", check.names = FALSE)
-group_info <- read.table(opt$info_file, header = TRUE, sep = "\t", check.names = FALSE)
+counts <- read.table(opt$expression_file, row.names = 1, header = TRUE, sep = "\t", check.names = FALSE, stringsAsFactors = FALSE, fill = TRUE, comment.char = "",quote = "")
+group_info <- read.table(opt$info_file, header = TRUE, sep = "\t", check.names = FALSE, fill = TRUE, comment.char = "")
 groups <- factor(group_info$Group, levels = c("Control", "Treatment"))
 
+# Delete this line if the line name is empty
+if(any(is.na(counts[,1]))) {
+  counts <- counts[!is.na(counts[,1]), ]
+  cat("The row with the gene name NA has been deleted\n")
+}
+
+# If there are duplicate line names
+if(any(duplicated(counts[,1]))) {
+  rownames(counts) <- make.unique(as.character(counts[,1]))
+  counts <- counts[, -1]
+}
+
+counts <- counts[which(rowSums(counts)!=0),] # Delete the gene with an expression level of 0
+
+# Empty value processing KNN imputation
+if(any(is.na(counts))) {
+  cat("begin KNN imputation\n")
+  library(impute)
+  counts <- impute.knn(as.matrix(counts))$data
+}
 
 # Delete rows with low expression (less than 1 read)
 counts <- counts[rowMeans(counts)>1,]
@@ -43,7 +65,7 @@ dds <- dds[keep, ]
 dds <- DESeq(dds, minReplicatesForReplace=5, parallel = FALSE)  
 
 # Extract results
-DESeq2_results <- results(dds, contrast = c("group", "Treatment", "Control"))
+DESeq2_results <- results(dds, contrast = c("group", "Treatment", "Control"), pAdjustMethod = opt$correction)
 DESeq2_results <- as.data.frame(DESeq2_results)
 
 
@@ -130,7 +152,7 @@ p1 <- pheatmap(df2,
                 clustering_distance_rows = "euclidean",
                 clustering_distance_cols = "euclidean",
                 show_colnames = T,
-                show_rownames = T,
+                # show_rownames = T,
                 annotation_col = col_annotation,
                 annotation_colors = list(Group=c(Control='#cfc6fe',Treatment='#CCDFF1')),
                 fontsize = 20,

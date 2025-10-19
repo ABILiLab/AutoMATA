@@ -21,7 +21,9 @@ option_list <- list(
   make_option(c("-b", "--organism"), type="character", default="hsa", action="store", help="This argument decides organism. Options are hsa, mmu, bos, or dme."),
   make_option(c("-c", "--pvalue"), type="double", default=0.05, action="store", help="This argument decides pvalue threshold for KEGG enrichment analysis"),
   make_option(c("-d", "--qvalue"), type="double", default=0.05, action="store", help="This argument decides qvalue threshold for KEGG enrichment analysis"),
-  make_option(c("-e", "--termNum"), type="integer", default=5, action="store", help="This argument is the number of terms for each ontology to be displayed")
+  make_option(c("-e", "--termNum"), type="integer", default=5, action="store", help="This argument is the number of terms for each ontology to be displayed"),
+  make_option(c("-g", "--adjust"), type="character", default="BH", action="store", help="This argument is the pvalue adjustment method for KEGG enrichment analysis, one of holm, hochberg, hommel, bonferroni, BH, BY, fdr, none")
+
 )
 opt = parse_args(OptionParser(option_list = option_list, usage = "This Script is to draw KEGG Enrichment!", add_help_option=FALSE))
 
@@ -32,6 +34,7 @@ qvalue <- opt$qvalue
 termNum <- opt$termNum
 type <- opt$type
 org <- opt$organism 
+adjust <- opt$adjust
 
 # read data
 table_data <- read.table(opt$input, header = TRUE, sep = "\t", check.names = FALSE)
@@ -48,16 +51,16 @@ for (gene in gene_column){
     id <- tryCatch({
         if (org == "hsa"){
             library(org.Hs.eg.db)
-            mget(gene, org.Hs.egSYMBOL2EG)
+            mget(gene, org.Hs.egSYMBOL2EG)[[1]][1]
         }else if(org == "mmu"){
             library(org.Mm.eg.db)
-            mget(gene, org.Mm.egSYMBOL2EG)
+            mget(gene, org.Mm.egSYMBOL2EG)[[1]][1]
         }else if (org == "bos"){
             library(org.Bt.eg.db)
-            mget(gene, org.Bt.egSYMBOL2EG)
+            mget(gene, org.Bt.egSYMBOL2EG)[[1]][1]
         }else if (org == "dme"){
             library(org.Dm.eg.db)
-            mget(gene, org.Dm.egSYMBOL2EG)
+            mget(gene, org.Dm.egSYMBOL2EG)[[1]][1]
         }
     }, error = function(e) {
         NA
@@ -79,7 +82,8 @@ gene <- table_data$entrezID
 KEGG <- enrichKEGG(gene = gene, 
                     organism = org, 
                     pvalueCutoff = pvalue, 
-                    qvalueCutoff = qvalue)
+                    qvalueCutoff = qvalue,
+                    pAdjustMethod = adjust)
 
 KEGG <- as.data.frame(KEGG)
 

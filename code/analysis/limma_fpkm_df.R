@@ -11,7 +11,8 @@ option_list <- list(
   make_option(c("-i", "--expression_file"), type="character", default="../../data/analysis_example/expression_fpkm.txt", action="store", help="This argument is expression file path"),
   make_option(c("-k", "--info_file"), type="character", default="../../data/analysis_example/group_info_fpkm.txt", action="store", help="This argument is group info information file path"),
   make_option(c("-c", "--fc_thr"), type="double", action="store", default="2", help="This argument decides log2FC threshold for differential expression analysis"),
-  make_option(c("-d", "--padj_thr"), type="double", action="store", default="2", help="This argument decides padj threshold for differential expression analysis")
+  make_option(c("-d", "--padj_thr"), type="double", action="store", default="2", help="This argument decides padj threshold for differential expression analysis"),
+  make_option(c("-e", "--correction"), type="character", action="store", default="BH", help="This argument defines hypothesis correction method, including none, BH, BY, holm, hochberg, hommel, bonferroni")
 )
 opt = parse_args(OptionParser(option_list = option_list, usage = "This Script is to conduct differential expression analysis and generate volcano and cluster plots!", add_help_option=FALSE))
 
@@ -20,11 +21,32 @@ fc_thr <- opt$fc_thr
 padj_thr <- opt$padj_thr
 
 # read data
-fpkm <- read.table(opt$expression_file, row.names = 1, header = TRUE, sep = "\t", check.names = FALSE)
-group_info <- read.table(opt$info_file, header = TRUE, sep = "\t", check.names = FALSE)
+fpkm <- read.table(opt$expression_file, row.names = 1, header = TRUE, sep = "\t", check.names = FALSE, stringsAsFactors = FALSE, fill = TRUE, comment.char = "",quote = "")
+group_info <- read.table(opt$info_file, header = TRUE, sep = "\t", check.names = FALSE, fill = TRUE, comment.char = "")
+
+# Delete this line if the line name is empty
+if(any(is.na(fpkm[,1]))) {
+  fpkm <- fpkm[!is.na(fpkm[,1]), ]
+  cat("The row with the gene name NA has been deleted\n")
+}
+
+# If there are duplicate line names
+if(any(duplicated(fpkm[,1]))) {
+  rownames(fpkm) <- make.unique(as.character(fpkm[,1])) 
+  fpkm <- fpkm[, -1]
+}
 
 # Delete rows with too low an expression
 fpkm <- fpkm[which(rowSums(fpkm)!=0),]
+
+# Empty value processing KNN imputation
+if(any(is.na(fpkm))) {
+  # KNN imputation
+  cat("begin KNN imputation\n")
+  library(impute)
+  fpkm <- impute.knn(as.matrix(fpkm))$data
+}
+
 log_fpkm <- log2(fpkm + 1) #log process
 log_fpkm[log_fpkm == -Inf] = 0 # Replace the logged negative infinity value with 0
 
@@ -41,7 +63,7 @@ fit2 <- contrasts.fit(fit, contrasts)
 fit2 <- eBayes(fit2, trend=TRUE)
 
 # Extract the results of the differential expression analysis
-diff_results <- topTable(fit2, coef = 1, number = Inf, adjust.method = "BH")
+diff_results <- topTable(fit2, coef = 1, number = Inf, adjust.method = opt$correction)
 
 
 # rename column names

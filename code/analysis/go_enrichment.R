@@ -20,7 +20,8 @@ option_list <- list(
   make_option(c("-b", "--organism"), type="character", default="Homo_sapiens", action="store", help="This argument decides organism. Options are Homo_sapiens, Mus_musculus, Bovine, Homo_sapiens, Drosophila_melanogaster"),
   make_option(c("-c", "--pvalue"), type="double", action="store", default="0.05", help="This argument decides pvalue threshold for GO enrichment analysis"),
   make_option(c("-d", "--qvalue"), type="double", action="store", default="0.05", help="This argument decides qvalue threshold for GO enrichment analysis"),
-  make_option(c("-e", "--termNum"), type="integer", default="5", action="store", help="This argument is the number of terms for each ontology to be displayed")
+  make_option(c("-e", "--termNum"), type="integer", default="5", action="store", help="This argument is the number of terms for each ontology to be displayed"),
+  make_option(c("-g", "--adjust"), type="character", default="BH", action="store", help="This argument is the pvalue adjustment method for GO enrichment analysis, one of holm, hochberg, hommel, bonferroni, BH, BY, fdr, none")
 )
 opt = parse_args(OptionParser(option_list = option_list, usage = "This Script is to draw GO Enrichment!", add_help_option=FALSE))
 
@@ -44,6 +45,7 @@ pvalue <- opt$pvalue
 qvalue <- opt$qvalue 
 type <- opt$type
 termNum <- opt$termNum
+adjust <- opt$adjust
 
 # read data
 table_data <- read.table(opt$input, header = TRUE, sep = "\t", check.names = FALSE)
@@ -57,13 +59,13 @@ entrez_ids <- c()
 for (gene in gene_column){
     id <- tryCatch({
         if (organism == "Homo_sapiens"){
-            mget(gene, org.Hs.egSYMBOL2EG)
+            mget(gene, org.Hs.egSYMBOL2EG)[[1]][1]
         }else if(organism == "Mus_musculus"){
-            mget(gene, org.Mm.egSYMBOL2EG)
+            mget(gene, org.Mm.egSYMBOL2EG)[[1]][1]
         }else if (organism == "Bovine"){
-            mget(gene, org.Bt.egSYMBOL2EG)
+            mget(gene, org.Bt.egSYMBOL2EG)[[1]][1]
         }else if (organism == "Fly"){
-            mget(gene, org.Dm.egSYMBOL2EG)
+            mget(gene, org.Dm.egSYMBOL2EG)[[1]][1]
         }
     }, error = function(e) {
         NA
@@ -86,7 +88,8 @@ GO <- enrichGO(gene = gene,
                pvalueCutoff = pvalue, 
                qvalueCutoff = qvalue, 
                ont = "ALL",  # "ALL", "BP", "MF", and "CC" 
-               readable  = TRUE)
+               readable  = TRUE,
+               pAdjustMethod = adjust)
 
 
 # # Filter enrichment analysis results
